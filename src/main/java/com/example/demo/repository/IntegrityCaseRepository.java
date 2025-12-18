@@ -1,2 +1,4 @@
 package com.example.demo.repository;
-public interface Integr
+public interface IntegrityCaseRepository{
+    
+}
