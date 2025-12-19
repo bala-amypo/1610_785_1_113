@@ -20,4 +20,16 @@ public class IntegrityCaseEntity{
     private String status;
     private LocalDate incidentDate;
     private LocalDateTime createdAt;
+
+    public IntegrityCaseEntity{}
+
+    public IntegrityCaseEntity(Long id,String courseCode,String instructorName,
+    String description,String status,LocalDate incidentDate,LocalDateTime createdAt){
+        this.
+        this.
+        this.
+        this.
+        this.
+         this.
+    }
 }
