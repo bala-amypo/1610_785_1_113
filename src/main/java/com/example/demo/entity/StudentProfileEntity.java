@@ -57,7 +57,16 @@ public class StudentProfileEntity{
     public Boolean getRepeatOffender(){
         return RepeatOffender;
     }
-    public void setRepeatOffender()
+    public void setRepeatOffender(Boolean repeatOffender){
+        this.repeatOffender=repeatOffender;
+    }
+    public LocalDateTime  getCreatedAt(){
+        return createdAt;
+    }
+    public void setCreatedAt(LocalDateTime createdAt){
+        this.createdAt=createdAt;
+    }
+
     public StudentProfileEntity{}
 
 }
