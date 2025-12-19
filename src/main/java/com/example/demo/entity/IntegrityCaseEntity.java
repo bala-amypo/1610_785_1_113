@@ -37,7 +37,26 @@ public class IntegrityCaseEntity{
     public String getInstructorName(){
           return instructorName;
     }
-    public void setInstructorName(String instructorName
+    public void setInstructorName(String instructorName){
+          this.instructorName=instructorName;
+    }
+    public  string getDescription(){
+        return description;
+    }
+    public void setDescription(String description){
+        this.description=description;
+    }
+    public String getStatus(){
+        return status;
+    }
+    public void setStatus(String status){
+        this.status=status;
+    }
+    public LocalDate getIncidentDate(){
+        return  incidentDate;
+    }
+    
+
 
     public IntegrityCaseEntity{}
 
