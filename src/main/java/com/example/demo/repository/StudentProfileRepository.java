@@ -9,4 +9,3 @@ public interface StudentProfileRepository extends JpaRepository<StudentProfileEn
 
 }
     
-}
