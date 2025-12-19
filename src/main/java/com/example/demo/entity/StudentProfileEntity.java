@@ -17,4 +17,20 @@ public class StudentProfileEntity{
     private Boolean repeatOffender=false;
     private LocalDateTime createdAt=LocalDateTime.now();
 
+
+    public Long getId(){
+        return id;
+    }
+    public void setId(Long id){
+        this.id=id;
+    }
+    public String getStudentId(){
+        return studentId;
+    }
+    public void setStudentId(String studentId){
+        this.studentId=studentId;
+    }
+    public 
+    public StudentProfileEntity{}
+
 }
