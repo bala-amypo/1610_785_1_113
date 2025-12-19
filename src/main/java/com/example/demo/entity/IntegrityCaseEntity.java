@@ -21,15 +21,24 @@ public class IntegrityCaseEntity{
     private LocalDate incidentDate;
     private LocalDateTime createdAt;
 
+    public Long getId(){
+        return id;
+    }
+    public void setId(Long id){
+        this.id=id;
+    }
+    public String getCourseCode(
+
     public IntegrityCaseEntity{}
 
     public IntegrityCaseEntity(Long id,String courseCode,String instructorName,
     String description,String status,LocalDate incidentDate,LocalDateTime createdAt){
-        this.
-        this.
-        this.
-        this.
-        this.
-         this.
+        this.id=id;
+        this.courseCode=courseCode;
+        this.instructorName=instructorName;
+        this.description=description;
+        this.status=status;
+        this.incidentDate=incidentDate;
+        this.createdAt=createdAt;
     }
 }
