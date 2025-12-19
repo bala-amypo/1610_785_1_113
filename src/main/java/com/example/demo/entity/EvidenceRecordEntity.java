@@ -19,7 +19,20 @@ public class EvidenceRecordEntity{
     private String submittedBy;
     private LocalDateTime submittedAt;
 
+    public Long getId(){
+        return id;
+    }
+    public void setId(Long id)
+
     public EvidenceRecordEntity{}
 
-    public EvidenceRecordEntity()
+    public EvidenceRecordEntity(Long id,String evidenceType,String content,
+    String submittedBy,LocalDateTime submittedAt){
+        this.id=id;
+        this.evidenceType=evidenceType;
+        this.content=content;
+        this.submittedBy=submittedBy;
+        this.submittedAt=submittedAt;
+    }
+
 }
