@@ -22,7 +22,22 @@ public class EvidenceRecordEntity{
     public Long getId(){
         return id;
     }
-    public void setId(Long id)
+    public void setId(Long id){
+        this.id=id;
+    }
+    public String getEvidenceType(){
+        return evidenceType;
+    }
+    public void setEvidenceType(String evidenceType){
+        this.evidenceType=evidenceType;
+    }
+    public String getContent(){
+        return content;
+    }
+    public void setcontent(String content){
+        this.content=content;
+    }
+    public String 
 
     public EvidenceRecordEntity{}
 
