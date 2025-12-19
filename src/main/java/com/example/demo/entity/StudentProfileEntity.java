@@ -48,7 +48,16 @@ public class StudentProfileEntity{
     public void setProgram(String program){
         this.program=program;
     }
-    
+    public Integer getYearLevel(){
+        return yearLevel;
+    }
+    public void setYearLevel(Integer yearLevel){
+        this.yearLevel=yearLevel;
+    }
+    public Boolean getRepeatOffender(){
+        return RepeatOffender;
+    }
+    public void setRepeatOffender()
     public StudentProfileEntity{}
 
 }
