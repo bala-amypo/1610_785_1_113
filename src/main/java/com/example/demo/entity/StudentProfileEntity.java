@@ -1,6 +1,7 @@
 package com.example.demo.entity;
 
-import java.time.LocalD
+import java.time.LocalDateTime;
+import java.util.List;
 import jakarta.persistence.Id;
 import jakarta.persistence.GeneratedValue;
 import jalarta.persistence.GenerationType;
@@ -70,5 +71,7 @@ public class StudentProfileEntity{
     }
 
     public StudentProfileEntity{}
+
+    public StudentProfileEntity(Long id,String studentId,String name,String email,String program,Integer yearLevel,Boolean repeatOffender,LocalDateTime)
 
 }
