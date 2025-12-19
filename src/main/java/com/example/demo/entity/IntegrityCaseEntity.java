@@ -55,7 +55,15 @@ public class IntegrityCaseEntity{
     public LocalDate getIncidentDate(){
         return  incidentDate;
     }
-    
+    public void setIncidentDate(LocalDate incidentDate){
+        this.incidentDate=incidentDate;
+    }
+    public LocalDateTime getCreatedAt(){
+        return  createdAt;
+    }
+    public void setCreatedAt(LocalDateTime createdAt){
+         this.createdAt=createdAt;
+    }
 
 
     public IntegrityCaseEntity{}
