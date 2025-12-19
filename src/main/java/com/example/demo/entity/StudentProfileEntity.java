@@ -72,6 +72,15 @@ public class StudentProfileEntity{
 
     public StudentProfileEntity{}
 
-    public StudentProfileEntity(Long id,String studentId,String name,String email,String program,Integer yearLevel,Boolean repeatOffender,LocalDateTime)
+    public StudentProfileEntity(Long id,String studentId,String name,String email,String program,Integer yearLevel,Boolean repeatOffender,LocalDateTime createdAt){
+        this.id=id;
+        this.studentId=studentId;
+        this.name=name;
+        this.email=email;
+        this.program=program;
+        this.yearLevel=yearLevel;
+        this.repeatOffender=repeatOffender;
+        this.createdAt=createdAt;
+    }
 
 }
