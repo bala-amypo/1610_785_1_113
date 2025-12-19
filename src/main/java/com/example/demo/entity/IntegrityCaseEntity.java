@@ -27,7 +27,17 @@ public class IntegrityCaseEntity{
     public void setId(Long id){
         this.id=id;
     }
-    public String getCourseCode(
+    public String getCourseCode(){
+         return courseCode;
+    }
+    public void setCourseCode(String courseCode){
+         this.courseCode=courseCode;
+
+    }
+    public String getInstructorName(){
+          return instructorName;
+    }
+    public void setInstructorName(String instructorName
 
     public IntegrityCaseEntity{}
 
