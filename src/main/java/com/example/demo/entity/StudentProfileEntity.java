@@ -8,6 +8,13 @@ import jakarta.persistence.Entity;
 public class StudentProfileEntity{
     @Id
     @GeneratedValue
-    pr
+    private Long id;
+    private String studentId;
+    private String name;
+    private String email;
+    private String program;
+    private Integer yearLevel;
+    private Boolean repeatOffender=false;
+    private LocalDateTime createdAt=LocalDateTime.now();
 
 }
