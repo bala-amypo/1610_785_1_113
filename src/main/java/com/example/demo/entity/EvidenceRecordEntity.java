@@ -37,7 +37,18 @@ public class EvidenceRecordEntity{
     public void setcontent(String content){
         this.content=content;
     }
-    public String 
+    public String getSubmittedBy(){
+        return submittedBy;
+    }
+    public void setSubmittedBy(String submittedBy){
+        this.submittedBy=submittedBy;
+    }
+    public LocalDateTime getSubmittedAt(){
+        return  submittedAt;
+    }
+    public void setSubmittedAt(LocalDateTime submittedAt){
+        this.submittedAt=submittedAt;
+    }
 
     public EvidenceRecordEntity{}
 
