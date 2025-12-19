@@ -1,4 +1,4 @@
 package com.example.demo.repository;
-public interface StudentProfileRepository{
+public interface StudentProfileRepository extends JpaRepository<StudentProfileEntity
     
 }
