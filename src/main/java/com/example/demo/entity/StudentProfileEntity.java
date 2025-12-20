@@ -3,8 +3,10 @@ package com.example.demo.entity;
 
 import jakarta.persistence.Id;
 import jakarta.persistence.GeneratedValue;
-import jalarta.persistence.GenerationType;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.PrePersist;
+
 
 import lombok.Data;
 import lombok.AllArgsConstructor;
