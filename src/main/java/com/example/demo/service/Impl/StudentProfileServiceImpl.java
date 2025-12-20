@@ -17,6 +17,17 @@ public class StudentProfileServiceImpl implements StudentProfileService{
         }
 
         @Override
-        public 
+        public List<StudentProfileEntity>getAllData(){
+            return student.findAll();
+        }
+
+        @Override
+        public StudentProfileEntity getStudentById(Long id){
+            return student.findById(id).orElse(null);
+        }
+
+        @Override
+        public StudentProfileEntity updateRepeatStatus(String studentId,Boolean status)
+
     
 }
