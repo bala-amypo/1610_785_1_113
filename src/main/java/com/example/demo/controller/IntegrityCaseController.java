@@ -1,51 +1,99 @@
+// package com.example.demo.controller;
+
+// import java.util.List;
+
+// import org.springframework.web.bind.annotation.RestController;
+// // import org.springframework.web.bind.annotation.RequestParam;
+// import org.springframework.web.bind.annotation.RequestBody;
+// import org.springframework.beans.factory.annotation.Autowired;
+
+
+// import org.springframework.web.bind.annotation.PostMapping;
+// import org.springframework.web.bind.annotation.GetMapping;
+// import org.springframework.web.bind.annotation.RequestMapping;
+// import org.springframework.web.bind.annotation.PutMapping;
+// import org.springframework.web.bind.annotation.PathVariable;
+
+// import com.example.demo.service.IntegrityCaseService;
+// import com.example.demo.entity.IntegrityCaseEntity;
+
+
+
+// @RestController
+// public class IntegrityCaseController{
+//      @Autowired IntegrityCaseService ser;
+
+//      @PostMapping("/p2")
+//      public IntegrityCaseEntity sendData(@RequestBody IntegrityCaseEntity stu){
+//         return ser.postData(stu);
+//      }
+
+//      @GetMapping("G2")
+//      public List<IntegrityCaseEntity>getAll(){
+//         return ser.getAllData();
+//      }
+
+//      @GetMapping("Ge2/{id}")
+//      public IntegrityCaseEntity getById(@PathVariable Long id){
+//         return ser.getStudentById(id);
+//      }
+
+//      @PutMapping("Put2/{id}/status")
+//      public IntegrityCaseEntity updateRepeatStatus(@PathVariable Long id,@RequestBody String status){
+//          return ser.updateRepeatStatus(id,status);
+//      }
+
+//      @GetMapping("Get2/student/{studentId}")
+//      public List<IntegrityCaseEntity> getByStudentIdentifier(@PathVariable String studentId){
+//         return ser.getByStudentIdentifier(studentId);
+//      }
+
+// }
+
+
+
+
 package com.example.demo.controller;
 
 import java.util.List;
 
-import org.springframework.web.bind.annotation.RestController;
-// import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
 
-
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-
+import com.example.demo.entity.IntegrityCase;
 import com.example.demo.service.IntegrityCaseService;
-import com.example.demo.entity.IntegrityCaseEntity;
-
-
 
 @RestController
-public class IntegrityCaseController{
-     @Autowired IntegrityCaseService ser;
+@RequestMapping("/api/cases")
+public class IntegrityCaseController {
 
-     @PostMapping("/p2")
-     public IntegrityCaseEntity sendData(@RequestBody IntegrityCaseEntity stu){
-        return ser.postData(stu);
-     }
+    @Autowired
+    private IntegrityCaseService service;
 
-     @GetMapping("G2")
-     public List<IntegrityCaseEntity>getAll(){
-        return ser.getAllData();
-     }
+    @PostMapping
+    public IntegrityCase createCase(@RequestBody IntegrityCase integrityCase) {
+        return service.createCase(integrityCase);
+    }
 
-     @GetMapping("Ge2/{id}")
-     public IntegrityCaseEntity getById(@PathVariable Long id){
-        return ser.getStudentById(id);
-     }
+    @PutMapping("/{id}/status")
+    public IntegrityCase updateCaseStatus(
+            @PathVariable Long id,
+            @RequestParam String status) {
+        return service.updateCaseStatus(id, status);
+    }
 
-     @PutMapping("Put2/{id}/status")
-     public IntegrityCaseEntity updateRepeatStatus(@PathVariable Long id,@RequestBody String status){
-         return ser.updateRepeatStatus(id,status);
-     }
+    @GetMapping("/student/{studentId}")
+    public List<IntegrityCase> getCasesByStudent(@PathVariable Long studentId) {
+        return service.getCasesByStudent(studentId);
+    }
 
-     @GetMapping("Get2/student/{studentId}")
-     public List<IntegrityCaseEntity> getByStudentIdentifier(@PathVariable String studentId){
-        return ser.getByStudentIdentifier(studentId);
-     }
+    @GetMapping("/{id}")
+    public IntegrityCase getCaseById(@PathVariable Long id) {
+        return service.getCaseById(id);
+    }
 
+    @GetMapping
+    public List<IntegrityCase> getAllCases() {
+        return service.getAllCases();
+    }
 }
