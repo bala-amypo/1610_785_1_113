@@ -56,8 +56,8 @@ public class StudentProfile {
     public Integer getYearLevel() { return yearLevel; }
     public void setYearLevel(Integer yearLevel) { this.yearLevel = yearLevel; }
 
-    public Boolean getRepeatOffender() { return isRepeatOffender; }
-    public void setRepeatOffender(Boolean isRepeatOffender) { this.isRepeatOffender = isRepeatOffender; }
+    public Boolean getRepeatOffender() { return repeatOffender; }
+    public void setRepeatOffender(Boolean repeatOffender) { this.repeatOffender = repeatOffender; }
 
     public LocalDateTime getCreatedAt() { return createdAt; }
 }
