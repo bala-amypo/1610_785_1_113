@@ -19,5 +19,7 @@ public class StudentProfileController{
         return ser.postData(stu);
      }
 
+     @Get
+
 
 }

@@ -1,5 +1,6 @@
 package com.example.demo.service.Impl;
 
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -37,7 +38,7 @@ public class StudentProfileServiceImpl implements StudentProfileService{
         }
         @Override
         public StudentProfileEntity getByStudentIdentifier(String studentId){
-            return student.find
+            return student.findByStudentId(studentId).orElse(null);
         }
 
     
