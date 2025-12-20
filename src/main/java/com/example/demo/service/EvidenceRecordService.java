@@ -3,10 +3,10 @@ package com.example.demo.service;
 import java.util.List;
 import com.example.demo.entity.IntegrityCaseEntity;
 public interface IntegrityCaseService{
-     IntegrityCaseEntity postData(StudentProfileEntity stu);
-     List<StudentProfileEntity>getAllData(); //get all
-     StudentProfileEntity getStudentById(Long id);  //get by Id
-     StudentProfileEntity updateRepeatStatus(String studentId,Boolean status); //put repeat
-     StudentProfileEntity getByStudentIdentifier(String studentId);  //lookup
+     IntegrityCaseEntity postData(IntegrityCaseEntity stu);
+     List<IntegrityCaseEntity>getAllData(); //get all
+     IntegrityCaseEntity getStudentById(Long id);  //get by Id
+     IntegrityCaseEntity updateRepeatStatus(Long Id,String status); //put repeat
+     IntegrityCaseEntity getByStudentIdentifier(String studentId);  //lookup
 
 }
