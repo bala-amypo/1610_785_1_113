@@ -6,8 +6,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.PrePersist;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.JoinColumn;
+// import jakarta.persistence.ManyToOne;
+// import jakarta.persistence.JoinColumn;
 
 
 import lombok.Data;
@@ -32,9 +32,9 @@ public class IntegrityCaseEntity{
     private LocalDate incidentDate;
     private LocalDateTime createdAt;
 
-    @ManyToOne
-    @JoinColumn(name="student_id")
-    private StudentProfile studentProfile;
+    // @ManyToOne
+    // @JoinColumn(name="student_id")
+    // private StudentProfile studentProfile;
     
     @PrePersist
     public void setDefaults(){
