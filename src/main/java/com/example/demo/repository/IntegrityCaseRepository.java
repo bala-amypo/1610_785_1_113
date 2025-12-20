@@ -3,11 +3,11 @@ import java.util.List;
 
 import org.springframework.stereotype.Repository;
 import org.springframework.data.jpa.repository.JpaRepository;
-import com.example.demo.entity.StudentProfileEntity;
+import com.example.demo.entity.IntegrityCaseEntity;
 
 @Repository
-public interface StudentProfileRepository extends JpaRepository<StudentProfileEntity,Long>{
-        Optional<StudentProfileEntity>findByStudentId(String studentId);
+public interface IntegrityCaseRepository extends JpaRepository<IntegrityCaseEntity,Long>{
+        Optional<IntegrityCaseEntity>findByStudentId(String studentId);
 }
     
 
