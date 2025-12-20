@@ -33,11 +33,14 @@ public class IntegrityCaseEntity{
     private LocalDateTime createdAt;
 
     @ManyToOne
-    @JoinColumn(name="s")
+    @JoinColumn(name="student_id")
+    private StudentProfile studentProfile;
     
     @PrePersist
     public void setDefaults(){
         this.createdAt=LocalDateTime.now();
-        this.status="OPEN";
+        if(this.status==null){
+           this.status="OPEN";
+      }
     }
 }
