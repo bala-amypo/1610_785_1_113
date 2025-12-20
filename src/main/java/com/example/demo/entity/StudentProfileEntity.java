@@ -1,7 +1,6 @@
 package com.example.demo.entity;
 
-// import java.time.LocalDateTime;
-// import java.util.List;
+
 import jakarta.persistence.Id;
 import jakarta.persistence.GeneratedValue;
 import jalarta.persistence.GenerationType;
@@ -25,7 +24,13 @@ public class StudentProfileEntity{
     private String email;
     private String program;
     private Integer yearLevel;
-    private Boolean repeatOffender=false;
-    private LocalDateTime createdAt=LocalDateTime.now();
+    private Boolean repeatOffender;
+    private LocalDateTime createdAt;
+
+    @PrePersist
+    public void onCreate(){
+        this.createdAt=LocalDateTime.now();
+        this.repeatOffender=false;
+    }
 
 }
