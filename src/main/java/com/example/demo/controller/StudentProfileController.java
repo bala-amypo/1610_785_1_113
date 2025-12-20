@@ -69,7 +69,7 @@ public class StudentProfileController {
     @Autowired
     private StudentProfileService service;
 
-    @PostMapping
+    @PostMapping("p1")
     public StudentProfile createStudent(@RequestBody StudentProfile student) {
         return service.createStudent(student);
     }
@@ -79,19 +79,19 @@ public class StudentProfileController {
         return service.getStudentById(id);
     }
 
-    @GetMapping
+    @GetMapping("g1")
     public List<StudentProfile> getAllStudents() {
         return service.getAllStudents();
     }
 
-    @PutMapping("/{studentId}/repeat-status")
+    @PutMapping("put1/{studentId}/repeat-status")
     public StudentProfile updateRepeatStatus(
             @PathVariable Long studentId,
             @RequestParam boolean status) {
         return service.updateRepeatStatus(studentId, status);
     }
 
-    @GetMapping("/lookup/{identifier}")
+    @GetMapping("ge1/lookup/{identifier}")
     public StudentProfile findByIdentifier(@PathVariable String identifier) {
         return service.findByStudentIdentifier(identifier);
     }
