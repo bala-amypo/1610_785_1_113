@@ -31,8 +31,8 @@ public class IntegrityCaseEntity{
     private LocalDateTime createdAt;
     
     @PrePersist
-    public void onCreate(){
+    public void setDefaults(){
         this.createdAt=LocalDateTime.now();
-        this.repeatOffender=false;
+        this.status="OPEN";
     }
 }
