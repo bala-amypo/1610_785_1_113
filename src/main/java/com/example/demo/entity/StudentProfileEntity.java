@@ -8,9 +8,12 @@ import jalarta.persistence.GenerationType;
 import jakarta.persistence.Entity;
 
 @Entity
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class StudentProfileEntity{
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long id;
     private String studentId;
     private String name;
