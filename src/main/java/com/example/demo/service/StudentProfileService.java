@@ -5,6 +5,6 @@ public interface StudentProfileService{
      StudentProfileEntity postData(StudentProfileEntity stu);
      List<StudentProfileEntity>getAllData(); //get all
      StudentProfileEntity  getStudentById(Long id);  
-     StudentProfileEntity  updateDate()
+     StudentProfileEntity  updateRepeatStatus(String studentId,Boolean status)
 
 }
