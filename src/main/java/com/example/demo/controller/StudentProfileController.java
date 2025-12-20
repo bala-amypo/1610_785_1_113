@@ -24,14 +24,17 @@ public class StudentProfileController{
         return ser.getAllData();
      }
 
-     @GetMapping("G2/{id}")
+     @GetMapping("Ge1/{id}")
      public StudentProfileEntity getById(@PathVariable Long id){
         return ser.getStudentById(id);
      }
 
      @PutMapping("Put1/{studentId}/repeat")
-     public StudentProfileEntity updateRepeat(@PathVariable String studentId,@
-     )
+     public StudentProfileEntity updateRepeatStatus(@PathVariable String studentId,@RequestParam Boolean status){
+         return ser.updateRepeatStatus(studentId,status);
+     }
+
+     @GetMapping("Get1/")
 
 
 }
