@@ -44,7 +44,7 @@ public class IntegrityCaseController{
      }
 
      @GetMapping("Get2/student/{studentId}")
-     public List<StudentProfileEntity> getByStudentIdentifier(@PathVariable String studentId){
+     public List<IntegrityCaseEntity> getByStudentIdentifier(@PathVariable String studentId){
         return ser.getByStudentIdentifier(studentId);
      }
 

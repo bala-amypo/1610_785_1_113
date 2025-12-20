@@ -21,7 +21,7 @@ import java.time.LocalDate;
 
 public class IntegrityCaseEntity{
     @Id
-    @GeneratedValue(strategy=GenerationType.Identity)
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long id;
     private String courseCode;
     private String instructorName;
