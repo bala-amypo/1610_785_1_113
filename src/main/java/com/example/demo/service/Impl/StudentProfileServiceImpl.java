@@ -43,6 +43,6 @@ public class StudentProfileServiceImpl implements StudentProfileService {
 
     @Override
     public StudentProfile findByStudentIdentifier(String identifier) {
-        return repo.findByStudentIdentifier(identifier);
+        return repo.findByStudentId(identifier).orElse(null);
     }
 }
