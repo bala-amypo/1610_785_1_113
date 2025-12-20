@@ -7,6 +7,6 @@ public interface IntegrityCaseService{
      List<IntegrityCaseEntity>getAllData(); //get all
      IntegrityCaseEntity getStudentById(Long id);  //get by Id
      IntegrityCaseEntity updateRepeatStatus(Long id,String status); //put repeat
-     IntegrityCaseEntity getByStudentIdentifier(String studentId);  //lookup
+     List<IntegrityCaseEntity>getByStudentIdentifier(String studentId);  //lookup
 
 }
