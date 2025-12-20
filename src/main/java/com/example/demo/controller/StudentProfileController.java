@@ -19,12 +19,17 @@ public class StudentProfileController{
         return ser.postData(stu);
      }
 
-     @GetMapping
+     @GetMapping("G1")
      public List<StudentProfileEntity>getAll(){
         return ser.getAllData();
      }
 
-     @GetMapping("")
+     @GetMapping("G2/{id}")
+     public StudentProfileEntity getById(@PathVariable Long id){
+        return ser.getStudentById(id);
+     }
+
+     @
 
 
 }
