@@ -27,7 +27,18 @@ public class StudentProfileServiceImpl implements StudentProfileService{
         }
 
         @Override
-        public StudentProfileEntity updateRepeatStatus(String studentId,Boolean status)
+        public StudentProfileEntity updateRepeatStatus(String studentId,Boolean status){
+            StudentProfileEntity student=student.findByStudentId(studentId).orElse(null);
+            if(student !=null){
+                student.setRepeatOffender(status);
+                return student.save(student);
+            }
+            return null;
+        }
+        @Override
+        public StudentProfileEntity getByStudentIdentifier(String studentId){
+            return student.find
+        }
 
     
 }
