@@ -10,35 +10,35 @@ import com.example.demo.service.StudentProfileService;
 
 @Service
 public class StudentProfileServiceImpl implements StudentProfileService{
-        @Autowired StudentProfileRepository student;
+        @Autowired StudentProfileRepository repo;
 
         @Override
         public StudentProfileEntity postData(StudentProfileEntity stu){
-            return student.save(stu);
+            return repo.save(stu);
         }
 
         @Override
         public List<StudentProfileEntity>getAllData(){
-            return student.findAll();
+            return repo.findAll();
         }
 
         @Override
         public StudentProfileEntity getStudentById(Long id){
-            return student.findById(id).orElse(null);
+            return repo.findById(id).orElse(null);
         }
 
         @Override
         public StudentProfileEntity updateRepeatStatus(String studentId,Boolean status){
-            StudentProfileEntity student=student.findByStudentId(studentId).orElse(null);
+            StudentProfileEntity student=repo.findByStudentId(studentId).orElse(null);
             if(student !=null){
                 student.setRepeatOffender(status);
-                return student.save(student);
+                return repo.save(student);
             }
             return null;
         }
         @Override
         public StudentProfileEntity getByStudentIdentifier(String studentId){
-            return student.findByStudentId(studentId).orElse(null);
+            return repo.findByStudentId(studentId).orElse(null);
         }
 
     
