@@ -38,6 +38,6 @@ public class IntegrityCaseServiceImpl implements IntegrityCaseService{
         }
         @Override
         public List<IntegrityCaseEntity> getByStudentIdentifier(String studentId){
-            return repo.findByStudentId(studentId);
+            return repo.findByStudentProfile_StudentId(studentId);
         }   
 }
