@@ -12,6 +12,7 @@ import lombok.Data;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Entity
 @Data
@@ -28,5 +29,10 @@ public class IntegrityCaseEntity{
     private String status;
     private LocalDate incidentDate;
     private LocalDateTime createdAt;
-
+    
+    @PrePersist
+    public void onCreate(){
+        this.createdAt=LocalDateTime.now();
+        this.repeatOffender=false;
+    }
 }
