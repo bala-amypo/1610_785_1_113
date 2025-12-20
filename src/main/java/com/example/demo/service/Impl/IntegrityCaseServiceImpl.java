@@ -29,7 +29,7 @@ public class IntegrityCaseServiceImpl implements IntegrityCaseService{
 
         @Override
         public IntegrityCaseEntity updateRepeatStatus(Long id,String status){
-            IntegrityCaseEntity student=repo.findByStudentId(studentId).orElse(null);
+            IntegrityCaseEntity student=repo.findByStudentId(id).orElse(null);
             if(student !=null){
                 student.setRepeatOffender(status);
                 return repo.save(student);
