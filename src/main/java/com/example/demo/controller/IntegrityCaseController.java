@@ -27,19 +27,19 @@ public class IntegrityCaseController{
         return ser.postData(stu);
      }
 
-     @GetMapping("G1")
-     public List<StudentProfileEntity>getAll(){
+     @GetMapping("G2")
+     public List<IntegrityCaseEntity>getAll(){
         return ser.getAllData();
      }
 
-     @GetMapping("Ge1/{id}")
-     public StudentProfileEntity getById(@PathVariable Long id){
+     @GetMapping("Ge2/{id}")
+     public IntegrityCaseEntity getById(@PathVariable Long id){
         return ser.getStudentById(id);
      }
 
-     @PutMapping("Put1/{studentId}/repeat")
-     public StudentProfileEntity updateRepeatStatus(@PathVariable String studentId,@RequestBody Boolean status){
-         return ser.updateRepeatStatus(studentId,status);
+     @PutMapping("Put2/{id}/status")
+     public IntegrityCaseEntity updateRepeatStatus(@PathVariable Long id,@RequestBody String status){
+         return ser.updateRepeatStatus(id,status);
      }
 
      @GetMapping("Get1/lookup/{studentId}")
