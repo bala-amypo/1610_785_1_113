@@ -6,6 +6,6 @@ import com.example.demo.entity.StudentProfileEntity;
 
 @Repository
 public interface StudentProfileRepository extends JpaRepository<StudentProfileEntity,Long>{
-
+        Optional<StudentProfileEntity>findByStudentId(String studentId);
 }
     
