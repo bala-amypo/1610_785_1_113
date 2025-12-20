@@ -2,5 +2,7 @@ package com.example.demo.service;
 
 import com.example.demo.entity.StudentProfileEntity;
 public interface StudentProfileService{
-     StudentProfileEntity postData(StudentProfileEntity stu);
+     StudentProfileEntity postData(StudentProfileEntity stu);//post
+     List<StudentProfileEntity>getAllData(); //get
+     
 }
