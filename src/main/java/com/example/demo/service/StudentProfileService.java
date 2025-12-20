@@ -4,7 +4,8 @@ import com.example.demo.entity.StudentProfileEntity;
 public interface StudentProfileService{
      StudentProfileEntity postData(StudentProfileEntity stu);
      List<StudentProfileEntity>getAllData(); //get all
-     StudentProfileEntity  getStudentById(Long id);  
-     StudentProfileEntity  updateRepeatStatus(String studentId,Boolean status)
+     StudentProfileEntity getStudentById(Long id);  //get by Id
+     StudentProfileEntity updateRepeatStatus(String studentId,Boolean status); //put repeat
+     StudentProfileEntity getByStudentIdentifier(String studentId);  //lookup
 
 }

@@ -15,5 +15,8 @@ public class StudentProfileServiceImpl implements StudentProfileService{
         public StudentProfileEntity postData(StudentProfileEntity stu){
             return student.save(stu);
         }
+
+        @Override
+        public 
     
 }
