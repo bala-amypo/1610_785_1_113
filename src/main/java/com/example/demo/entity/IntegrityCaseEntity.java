@@ -21,6 +21,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 
+@Table(name="integrity_case")
 public class IntegrityCaseEntity{
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
