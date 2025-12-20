@@ -43,8 +43,8 @@ public class IntegrityCaseController{
          return ser.updateRepeatStatus(id,status);
      }
 
-     @GetMapping("Get1/lookup/{studentId}")
-     public StudentProfileEntity getByStudentIdentifier(@PathVariable String studentId){
+     @GetMapping("Get2/student/{studentId}")
+     public List<StudentProfileEntity> getByStudentIdentifier(@PathVariable String studentId){
         return ser.getByStudentIdentifier(studentId);
      }
 

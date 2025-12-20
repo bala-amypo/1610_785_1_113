@@ -37,7 +37,7 @@ public class IntegrityCaseServiceImpl implements IntegrityCaseService{
             return null;
         }
         @Override
-        public IntegrityCaseEntity getByStudentIdentifier(String studentId){
-            return repo.findByStudentId(studentId).orElse(null);
+        public List<IntegrityCaseEntity> getByStudentIdentifier(String studentId){
+            return repo.findByStudentId(studentId);
         }   
 }
