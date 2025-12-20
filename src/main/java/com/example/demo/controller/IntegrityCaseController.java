@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
-import com.example.demo.service.StudentProfileService;
-import com.example.demo.entity.StudentProfileEntity;
+import com.example.demo.service.IntegrityCaseService;
+import com.example.demo.entity.IntegrityCaseEntity;
 
 
 
