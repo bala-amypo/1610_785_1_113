@@ -39,7 +39,5 @@ public class StudentProfileServiceImpl implements StudentProfileService{
         @Override
         public StudentProfileEntity getByStudentIdentifier(String studentId){
             return repo.findByStudentId(studentId).orElse(null);
-        }
-
-    
+        }   
 }
