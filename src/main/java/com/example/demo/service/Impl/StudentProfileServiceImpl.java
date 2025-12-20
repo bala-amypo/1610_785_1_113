@@ -9,11 +9,11 @@ import com.example.demo.service.StudentProfileService;
 
 @Service
 public class StudentProfileServiceImpl implements StudentProfileService{
-        @Autowired StudentProfileRepository studdent;
+        @Autowired StudentProfileRepository student;
 
         @Override
         public StudentProfileEntity postData(StudentProfileEntity stu){
-            return
+            return student.save(stu);
         }
     
 }
