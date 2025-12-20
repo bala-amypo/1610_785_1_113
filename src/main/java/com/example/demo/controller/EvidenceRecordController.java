@@ -15,22 +15,22 @@ public class EvidenceRecordController {
     @Autowired
     private EvidenceRecordService service;
 
-    @PostMapping
+    @PostMapping("p5")
     public EvidenceRecord submitEvidence(@RequestBody EvidenceRecord evidence) {
         return service.submitEvidence(evidence);
     }
 
-    @GetMapping("/case/{caseId}")
+    @GetMapping("g5/case/{caseId}")
     public List<EvidenceRecord> getEvidenceByCase(@PathVariable Long caseId) {
         return service.getEvidenceByCase(caseId);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("ge5/{id}")
     public EvidenceRecord getEvidenceById(@PathVariable Long id) {
         return service.getEvidenceById(id);
     }
 
-    @GetMapping
+    @GetMapping("get5")
     public List<EvidenceRecord> getAllEvidence() {
         return service.getAllEvidence();
     }

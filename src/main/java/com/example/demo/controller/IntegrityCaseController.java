@@ -70,29 +70,29 @@ public class IntegrityCaseController {
     @Autowired
     private IntegrityCaseService service;
 
-    @PostMapping
+    @PostMapping("p4")
     public IntegrityCase createCase(@RequestBody IntegrityCase integrityCase) {
         return service.createCase(integrityCase);
     }
 
-    @PutMapping("/{id}/status")
+    @PutMapping("put4/{id}/status")
     public IntegrityCase updateCaseStatus(
             @PathVariable Long id,
             @RequestParam String status) {
         return service.updateCaseStatus(id, status);
     }
 
-    @GetMapping("/student/{studentId}")
+    @GetMapping("g4/student/{studentId}")
     public List<IntegrityCase> getCasesByStudent(@PathVariable Long studentId) {
         return service.getCasesByStudent(studentId);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("ge4/{id}")
     public IntegrityCase getCaseById(@PathVariable Long id) {
         return service.getCaseById(id);
     }
 
-    @GetMapping
+    @GetMapping("get4")
     public List<IntegrityCase> getAllCases() {
         return service.getAllCases();
     }

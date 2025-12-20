@@ -15,22 +15,22 @@ public class PenaltyActionController {
     @Autowired
     private PenaltyActionService service;
 
-    @PostMapping
+    @PostMapping("p3")
     public PenaltyAction addPenalty(@RequestBody PenaltyAction penalty) {
         return service.addPenalty(penalty);
     }
 
-    @GetMapping("/case/{caseId}")
+    @GetMapping("g3/case/{caseId}")
     public List<PenaltyAction> getPenaltiesByCase(@PathVariable Long caseId) {
         return service.getPenaltiesByCase(caseId);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("ge3/{id}")
     public PenaltyAction getPenaltyById(@PathVariable Long id) {
         return service.getPenaltyById(id);
     }
 
-    @GetMapping
+    @GetMapping("get3")
     public List<PenaltyAction> getAllPenalties() {
         return service.getAllPenalties();
     }

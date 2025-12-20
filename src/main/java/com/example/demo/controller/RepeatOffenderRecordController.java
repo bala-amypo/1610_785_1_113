@@ -15,17 +15,17 @@ public class RepeatOffenderRecordController {
     @Autowired
     private RepeatOffenderRecordService service;
 
-    @PostMapping("/refresh/{studentId}")
+    @PostMapping("p2/refresh/{studentId}")
     public RepeatOffenderRecord refreshRecord(@PathVariable Long studentId) {
         return service.refreshRepeatOffenderData(studentId);
     }
 
-    @GetMapping("/student/{studentId}")
+    @GetMapping("g2/student/{studentId}")
     public RepeatOffenderRecord getRecordByStudent(@PathVariable Long studentId) {
         return service.getRecordByStudent(studentId);
     }
 
-    @GetMapping
+    @GetMapping("ge2")
     public List<RepeatOffenderRecord> getAllRepeatOffenders() {
         return service.getAllRepeatOffenders();
     }
