@@ -1,4 +1,14 @@
 package com.example.demo.service;
-public interface PenaltyActionService{
-    
+import java.util.List;
+import com.example.demo.entity.PenaltyAction;
+
+public interface PenaltyActionService {
+
+    PenaltyAction addPenalty(PenaltyAction penalty);
+
+    List<PenaltyAction> getPenaltiesByCase(Long caseId);
+
+    PenaltyAction getPenaltyById(Long id);
+
+    List<PenaltyAction> getAllPenalties();
 }
