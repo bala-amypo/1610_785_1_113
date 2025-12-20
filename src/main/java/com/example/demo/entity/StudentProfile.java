@@ -34,7 +34,7 @@ public class StudentProfile {
     @PrePersist
     public void onCreate() {
         this.createdAt = LocalDateTime.now();
-        this.isRepeatOffender = false;
+        this.repeatOffender = false;
     }
 
     // Getters and Setters
@@ -56,8 +56,8 @@ public class StudentProfile {
     public Integer getYearLevel() { return yearLevel; }
     public void setYearLevel(Integer yearLevel) { this.yearLevel = yearLevel; }
 
-    public Boolean getIsRepeatOffender() { return isRepeatOffender; }
-    public void setIsRepeatOffender(Boolean isRepeatOffender) { this.isRepeatOffender = isRepeatOffender; }
+    public Boolean getRepeatOffender() { return isRepeatOffender; }
+    public void setRepeatOffender(Boolean isRepeatOffender) { this.isRepeatOffender = isRepeatOffender; }
 
     public LocalDateTime getCreatedAt() { return createdAt; }
 }
