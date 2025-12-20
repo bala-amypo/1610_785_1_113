@@ -3,7 +3,7 @@ package com.example.demo.controller;
 import java.util.List;
 
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.RequestParam;
+// import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -37,7 +37,7 @@ public class StudentProfileController{
      }
 
      @PutMapping("Put1/{studentId}/repeat")
-     public StudentProfileEntity updateRepeatStatus(@PathVariable String studentId,@RequestParam Boolean status){
+     public StudentProfileEntity updateRepeatStatus(@PathVariable String studentId,@RequestBody Boolean status){
          return ser.updateRepeatStatus(studentId,status);
      }
 
