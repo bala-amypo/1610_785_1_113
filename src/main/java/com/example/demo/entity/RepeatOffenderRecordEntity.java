@@ -1,4 +1,4 @@
 package com.example.demo.entity;
-public class RepeatOffenderedRecordEntity{
+public class RepeatOffenderRecordEntity{
     
 }
