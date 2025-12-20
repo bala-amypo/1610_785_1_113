@@ -1,0 +1,189 @@
+package com.example.demo.entity;
+
+import jakarta.persistence.*;
+import java.time.LocalDateTime;
+import java.util.List;
+
+@Entity
+@Table(name = "student_profiles")
+public class StudentProfile {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(unique = true, nullable = false)
+    private String studentId;
+
+    private String name;
+
+    @Column(unique = true)
+    private String email;
+
+    private String program;
+
+    @Column(nullable = false)
+    private Integer yearLevel;
+
+    private Boolean repeatOffender = false;
+
+    private LocalDateTime createdAt;
+
+    @OneToMany(mappedBy = "studentProfile")
+    private List<IntegrityCase> integrityCases;
+
+    public StudentProfile() {}
+
+    public StudentProfile(String studentId, String name, String email, String program, Integer yearLevel) {
+        this.studentId = studentId;
+        this.name = name;
+        this.email = email;
+        this.program = program;
+        this.yearLevel = yearLevel;
+    }
+
+    @PrePersist
+    public void onCreate() {
+        this.createdAt = LocalDateTime.now();
+        this.repeatOffender = false;
+    }
+
+    public Long getId() { return id; }
+    public String getStudentId() { return studentId; }
+    public String getName() { return name; }
+    public String getEmail() { return email; }
+    public String getProgram() { return program; }
+    public Integer getYearLevel() { return yearLevel; }
+    public Boolean getRepeatOffender() { return repeatOffender; }
+    public LocalDateTime getCreatedAt() { return createdAt; }
+
+    public void setRepeatOffender(Boolean repeatOffender) {
+        this.repeatOffender = repeatOffender;
+    }
+}                                                                                                                                                                                           package com.example.demo.repository;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import com.example.demo.entity.StudentProfile;
+import java.util.Optional;
+
+public interface StudentProfileRepository extends JpaRepository<StudentProfile, Long> {
+    Optional<StudentProfile> findByStudentId(String studentId);
+}
+ package com.example.demo.service;
+
+import com.example.demo.entity.StudentProfile;
+import java.util.List;
+
+public interface StudentProfileService {
+
+    StudentProfile createStudent(StudentProfile studentProfile);
+
+    StudentProfile getStudentById(Long id);
+
+    List<StudentProfile> getAllStudents();
+
+    StudentProfile updateRepeatOffenderStatus(Long studentId);
+}                                                                                                                                                                        package com.example.demo.service.impl;
+
+import com.example.demo.entity.StudentProfile;
+import com.example.demo.entity.RepeatOffenderRecord;
+import com.example.demo.repository.StudentProfileRepository;
+import com.example.demo.repository.IntegrityCaseRepository;
+import com.example.demo.repository.RepeatOffenderRecordRepository;
+import com.example.demo.service.StudentProfileService;
+import com.example.demo.util.RepeatOffenderCalculator;
+import com.example.demo.exception.ResourceNotFoundException;
+
+import java.util.List;
+
+public class StudentProfileServiceImpl implements StudentProfileService {
+
+    private final StudentProfileRepository studentRepo;
+    private final IntegrityCaseRepository caseRepo;
+    private final RepeatOffenderRecordRepository recordRepo;
+    private final RepeatOffenderCalculator calculator;
+
+    public StudentProfileServiceImpl(
+            StudentProfileRepository studentRepo,
+            IntegrityCaseRepository caseRepo,
+            RepeatOffenderRecordRepository recordRepo,
+            RepeatOffenderCalculator calculator) {
+
+        this.studentRepo = studentRepo;
+        this.caseRepo = caseRepo;
+        this.recordRepo = recordRepo;
+        this.calculator = calculator;
+    }
+
+    @Override
+    public StudentProfile createStudent(StudentProfile studentProfile) {
+        studentProfile.setRepeatOffender(false);
+        return studentRepo.save(studentProfile);
+    }
+
+    @Override
+    public StudentProfile getStudentById(Long id) {
+        return studentRepo.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Student not found"));
+    }
+
+    @Override
+    public List<StudentProfile> getAllStudents() {
+        return studentRepo.findAll();
+    }
+
+    @Override
+    public StudentProfile updateRepeatOffenderStatus(Long studentId) {
+
+        StudentProfile profile = studentRepo.findById(studentId)
+                .orElseThrow(() -> new ResourceNotFoundException("Student not found"));
+
+        var cases = caseRepo.findByStudentProfile(profile);
+
+        RepeatOffenderRecord record =
+                calculator.computeRepeatOffenderRecord(profile, cases);
+
+        recordRepo.save(record);
+
+        profile.setRepeatOffender(record.getTotalCases() >= 2);
+        return studentRepo.save(profile);
+    }
+}
+                  package com.example.demo.controller;
+
+import com.example.demo.entity.StudentProfile;
+import com.example.demo.service.StudentProfileService;
+
+import org.springframework.web.bind.annotation.*;
+import java.util.List;
+
+@RestController
+@RequestMapping("/api/students")
+public class StudentProfileController {
+
+    private final StudentProfileService service;
+
+    public StudentProfileController(StudentProfileService service) {
+        this.service = service;
+    }
+
+    @PostMapping
+    public StudentProfile create(@RequestBody StudentProfile studentProfile) {
+        return service.createStudent(studentProfile);
+    }
+
+    @GetMapping
+    public List<StudentProfile> getAll() {
+        return service.getAllStudents();
+    }
+
+    @GetMapping("/{id}")
+    public StudentProfile getById(@PathVariable Long id) {
+        return service.getStudentById(id);
+    }
+
+    @PutMapping("/{id}/repeat-status")
+    public StudentProfile updateRepeatStatus(@PathVariable Long id) {
+        return service.updateRepeatOffenderStatus(id);
+    }
+}
