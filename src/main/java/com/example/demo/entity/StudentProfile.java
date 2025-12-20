@@ -68,7 +68,7 @@ public class StudentProfile {
 
     private Integer yearLevel;
 
-    private Boolean isRepeatOffender;
+    private Boolean repeatOffender;
 
     private LocalDateTime createdAt;
 
