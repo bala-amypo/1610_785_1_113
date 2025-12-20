@@ -1,4 +1,6 @@
 package com.example.demo.service.Impl;
-public class StudentProfileServiceImpl {
+
+@Service
+public class StudentProfileServiceImpl implements StudentProfileService{
     
 }
