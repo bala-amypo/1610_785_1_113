@@ -1,9 +1,15 @@
 package com.example.demo.controller;
 
+import java.util.List;
+
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import org.springframework.web.bind.annotation;
+import org.springframework.web.bind.annotation;
+import org.springframework.web.bind.annotation;
 
 import com.example.demo.service.StudentProfileService;
 import com.example.demo.entity.StudentProfileEntity;
@@ -34,7 +40,10 @@ public class StudentProfileController{
          return ser.updateRepeatStatus(studentId,status);
      }
 
-     @GetMapping("Get1/")
+     @GetMapping("Get1/lookup/{studentId}")
+     public StudentProfileEntity getByStudentIdentifier(@PathVariable String studentId){
+        return ser.getByStudentIdentifier(studentId);
+     }
 
 
 }
