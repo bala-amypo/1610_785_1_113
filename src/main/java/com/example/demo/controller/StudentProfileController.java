@@ -29,7 +29,9 @@ public class StudentProfileController{
         return ser.getStudentById(id);
      }
 
-     @
+     @PutMapping("Put1/{studentId}/repeat")
+     public StudentProfileEntity updateRepeat(@PathVariable String studentId,@
+     )
 
 
 }
