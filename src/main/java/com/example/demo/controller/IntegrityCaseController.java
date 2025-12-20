@@ -47,5 +47,4 @@ public class IntegrityCaseController{
         return ser.getByStudentIdentifier(studentId);
      }
 
-
 }
