@@ -34,51 +34,6 @@ public class StudentProfile {
     @Max(value = 8, message = "Year level cannot exceed 8")
     private Integer yearLevel;
 
-    private Boolean isRepeatOffender = false;
-
-    private LocalDateTime createdAt;
-
-    @OneToMany(mappedBy = "studentProfile")
-    private List<IntegrityCase> integrityCases;
-
-    @PrePersist
-    public void onCreate() {
-        this.createdAt = LocalDateTime.now();
-    }
-
-    // getters & setters
-}                                                                                                                                                                             package com.example.demo.entity;
-
-
-
-
-
-
-import java.time.LocalDateTime;
-import java.util.List;
-
-import jakarta.persistence.*;
-
-@Entity
-@Table(name = "student_profile")
-public class StudentProfile {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @Column(unique = true, nullable = false)
-    private String studentId;
-
-    private String name;
-
-    @Column(unique = true)
-    private String email;
-
-    private String program;
-
-    private Integer yearLevel;
-
     private Boolean repeatOffender;
 
     private LocalDateTime createdAt;
