@@ -1,7 +1,7 @@
 package com.example.demo.controller;
 
 import java.util.List;
-import jakarta.validation.
+import jakarta.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -17,7 +17,7 @@ public class StudentProfileController {
     private StudentProfileService service;
 
     @PostMapping("p1")
-    public StudentProfile createStudent(@RequestBody StudentProfile student) {
+    public StudentProfile createStudent(@Valid @RequestBody StudentProfile student) {
         return service.createStudent(student);
     }
 

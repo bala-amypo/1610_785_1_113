@@ -16,7 +16,7 @@ public class PenaltyActionController {
     private PenaltyActionService service;
 
     @PostMapping("p3")
-    public PenaltyAction addPenalty(@RequestBody PenaltyAction penalty) {
+    public PenaltyAction addPenalty(@Valid @RequestBody PenaltyAction penalty) {
         return service.addPenalty(penalty);
     }
 

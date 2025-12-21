@@ -16,7 +16,7 @@ public class EvidenceRecordController {
     private EvidenceRecordService service;
 
     @PostMapping("p5")
-    public EvidenceRecord submitEvidence(@RequestBody EvidenceRecord evidence) {
+    public EvidenceRecord submitEvidence(@Valid @RequestBody EvidenceRecord evidence) {
         return service.submitEvidence(evidence);
     }
 

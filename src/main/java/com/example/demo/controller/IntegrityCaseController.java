@@ -71,7 +71,7 @@ public class IntegrityCaseController {
     private IntegrityCaseService service;
 
     @PostMapping("p4")
-    public IntegrityCase createCase(@RequestBody IntegrityCase integrityCase) {
+    public IntegrityCase createCase(@Valid @RequestBody IntegrityCase integrityCase) {
         return service.createCase(integrityCase);
     }
 
