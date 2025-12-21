@@ -13,10 +13,10 @@ public class PenaltyAction {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull(message = "Integrity case is mandatory")
-    @ManyToOne
-    @JoinColumn(name = "case_id")
-    private IntegrityCase integrityCase;
+   //  @NotNull(message = "Integrity case is mandatory")
+   //  @ManyToOne
+   //  @JoinColumn(name = "case_id")
+   //  private IntegrityCase integrityCase;
 
     @NotBlank(message = "Penalty type is mandatory")
     private String penaltyType;

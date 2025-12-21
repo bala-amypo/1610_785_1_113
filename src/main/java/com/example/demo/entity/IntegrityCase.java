@@ -14,10 +14,10 @@ public class IntegrityCase {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull(message = "Student profile is mandatory")
-    @ManyToOne
-    @JoinColumn(name = "student_id")
-    private StudentProfile studentProfile;
+    // @NotNull(message = "Student profile is mandatory")
+    // @ManyToOne
+    // @JoinColumn(name = "student_id")
+    // private StudentProfile studentProfile;
 
     @NotBlank(message = "Course code is mandatory")
     private String courseCode;

@@ -38,8 +38,8 @@ public class StudentProfile {
 
     private LocalDateTime createdAt;
 
-    @OneToMany(mappedBy = "studentProfile")
-    private List<IntegrityCase> integrityCases;
+//     @OneToMany(mappedBy = "studentProfile")
+//     private List<IntegrityCase> integrityCases;
 
     @PrePersist
     public void onCreate() {
