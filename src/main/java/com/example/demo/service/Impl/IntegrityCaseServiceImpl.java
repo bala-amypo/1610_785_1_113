@@ -27,16 +27,16 @@ public class IntegrityCaseServiceImpl implements IntegrityCaseService {
 
     @Override
     public IntegrityCase updateCaseStatus(Long id, String status) {
-        // IntegrityCase ic = caseRepo.findById(id).orElse(null);
-        // if (ic != null) {
-        //     ic.setStatus(status);
-        //     return caseRepo.save(ic);
-        // }
-        // return null;
+        IntegrityCase ic = caseRepo.findById(id).orElse(null);
+        if (ic != null) {
+            ic.setStatus(status);
+            return caseRepo.save(ic);
+        }
+        return null;
 
-        IntegrityCase ic=caseRepo.findById(id).orElseThrow(()->new ResourceNotFoundException("Case not found"));
-        ic.setStatus(status);
-        return caseRepo.save(ic);
+        // IntegrityCase ic=caseRepo.findById(id).orElseThrow(()->new ResourceNotFoundException("Case not found"));
+        // ic.setStatus(status);
+        // return caseRepo.save(ic);
     }
 
     @Override
