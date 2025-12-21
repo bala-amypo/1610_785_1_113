@@ -12,7 +12,7 @@ import com.example.demo.entity.StudentProfile;
 @Repository
 public interface IntegrityCaseRepository extends JpaRepository<IntegrityCase, Long> {
 
-    List<IntegrityCase> findByStudentProfile(StudentProfile studentProfile);
+    // List<IntegrityCase> findByStudentProfile(StudentProfile studentProfile);
 
     List<IntegrityCase> findByStatusAndIncidentDateAfter(String status, LocalDate date);
 
