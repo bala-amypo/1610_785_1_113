@@ -42,12 +42,12 @@ public class EvidenceRecord {
          this.id = id; 
     }
 
-    public IntegrityCase getIntegrityCase() { 
-        return integrityCase; 
-    }
-    public void setIntegrityCase(IntegrityCase integrityCase) { 
-        this.integrityCase = integrityCase; 
-    }
+//     public IntegrityCase getIntegrityCase() { 
+//         return integrityCase; 
+//     }
+//     public void setIntegrityCase(IntegrityCase integrityCase) { 
+//         this.integrityCase = integrityCase; 
+//     }
 
     public String getEvidenceType() {
          return evidenceType; 

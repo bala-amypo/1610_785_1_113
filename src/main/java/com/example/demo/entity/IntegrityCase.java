@@ -49,12 +49,12 @@ public class IntegrityCase {
         this.id = id; 
     }
 
-    public StudentProfile getStudentProfile() { 
-        return studentProfile; 
-    }
-    public void setStudentProfile(StudentProfile studentProfile) {
-         this.studentProfile = studentProfile; 
-    }
+    // public StudentProfile getStudentProfile() { 
+    //     return studentProfile; 
+    // }
+    // public void setStudentProfile(StudentProfile studentProfile) {
+    //      this.studentProfile = studentProfile; 
+    // }
 
     public String getCourseCode() { 
         return courseCode; 
