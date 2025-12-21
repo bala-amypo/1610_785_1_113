@@ -67,7 +67,10 @@ public class EvidenceRecord {
          return submittedBy; 
     }
     public void setSubmittedBy(String submittedBy) {
-         this.submittedBy = submittedBy; }
+         this.submittedBy = submittedBy; 
+    }
 
-    public LocalDateTime getSubmittedAt() { return submittedAt; }
+    public LocalDateTime getSubmittedAt() { 
+        return submittedAt; 
+    }
 }
