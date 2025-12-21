@@ -34,15 +34,13 @@ public class IntegrityCaseServiceImpl implements IntegrityCaseService {
         }
         return null;
 
-        // IntegrityCase ic=caseRepo.findById(id).orElseThrow(()->new ResourceNotFoundException("Case not found"));
-        // ic.setStatus(status);
-        // return caseRepo.save(ic);
+      
     }
 
     @Override
     public List<IntegrityCase> getCasesByStudent(Long studentId) {
         StudentProfile sp = studentRepo.findById(studentId).orElse(null);
-        return sp != null ? caseRepo.findByStudentProfile(sp) : List.of(); //null
+        return sp != null ? caseRepo.findByStudentProfile(sp) : List.of(); 
     }
 
     @Override
