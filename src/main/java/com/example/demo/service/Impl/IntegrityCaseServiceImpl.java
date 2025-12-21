@@ -27,18 +27,20 @@ public class IntegrityCaseServiceImpl implements IntegrityCaseService {
 
     @Override
     public IntegrityCase updateCaseStatus(Long id, String status) {
-        IntegrityCase ic = caseRepo.findById(id).orElse(null);
-        if (ic != null) {
-            ic.setStatus(status);
-            return caseRepo.save(ic);
-        }
-        return null;
+        // IntegrityCase ic = caseRepo.findById(id).orElse(null);
+        // if (ic != null) {
+        //     ic.setStatus(status);
+        //     return caseRepo.save(ic);
+        // }
+        // return null;
+
+        Integrity
     }
 
     @Override
     public List<IntegrityCase> getCasesByStudent(Long studentId) {
         StudentProfile sp = studentRepo.findById(studentId).orElse(null);
-        return sp != null ? caseRepo.findByStudentProfile(sp) : null;
+        return sp != null ? caseRepo.findByStudentProfile(sp) : List.of(); //null
     }
 
     @Override
