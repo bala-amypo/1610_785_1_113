@@ -34,7 +34,9 @@ public class IntegrityCaseServiceImpl implements IntegrityCaseService {
         // }
         // return null;
 
-        Integrity
+        IntegrityCase ic=caseRepo.findById(id).orElseThrow(()->new ResourceNotFoundException("Case not found"));
+        ic.setStatus(status);
+        return caseRepo.save(ic);
     }
 
     @Override
