@@ -28,7 +28,7 @@ public class RepeatOffenderRecordServiceImpl implements RepeatOffenderRecordServ
         if (sp == null) return null;
 
         RepeatOffenderRecord record = new RepeatOffenderRecord();
-        record.setStudentProfile(sp);
+        // record.setStudentProfile(sp);
         record.setTotalCases(1);
         record.setLastIncidentDate(LocalDate.now());
         record.setFlagSeverity("LOW");
