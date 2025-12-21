@@ -13,10 +13,10 @@ public class EvidenceRecord {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-//     @NotNull(message = "Integrity case is mandatory")
-//     @ManyToOne
-//     @JoinColumn(name = "case_id")
-//     private IntegrityCase integrityCase;
+    @NotNull(message = "Integrity case is mandatory")
+    @ManyToOne
+    @JoinColumn(name = "case_id")
+    private IntegrityCase integrityCase;
 
     @NotBlank(message = "Evidence type is mandatory")
     private String evidenceType;
@@ -42,12 +42,12 @@ public class EvidenceRecord {
          this.id = id; 
     }
 
-//     public IntegrityCase getIntegrityCase() { 
-//         return integrityCase; 
-//     }
-//     public void setIntegrityCase(IntegrityCase integrityCase) { 
-//         this.integrityCase = integrityCase; 
-//     }
+    public IntegrityCase getIntegrityCase() { 
+        return integrityCase; 
+    }
+    public void setIntegrityCase(IntegrityCase integrityCase) { 
+        this.integrityCase = integrityCase; 
+    }
 
     public String getEvidenceType() {
          return evidenceType; 

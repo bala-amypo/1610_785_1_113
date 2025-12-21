@@ -13,10 +13,10 @@ public class RepeatOffenderRecord {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-//     @NotNull(message = "Student profile is mandatory")
-//     @ManyToOne
-//     @JoinColumn(name = "student_id")
-//     private StudentProfile studentProfile;
+    @NotNull(message = "Student profile is mandatory")
+    @ManyToOne
+    @JoinColumn(name = "student_id")
+    private StudentProfile studentProfile;
 
     @NotNull(message = "Total cases is mandatory")
     @Min(value = 1, message = "Total cases must be at least 1")
@@ -36,12 +36,12 @@ public class RepeatOffenderRecord {
          this.id = id; 
     }
 
-//     public StudentProfile getStudentProfile() {
-//          return studentProfile;
-//     }
-//     public void setStudentProfile(StudentProfile studentProfile) { 
-//         this.studentProfile = studentProfile; 
-//     }
+    public StudentProfile getStudentProfile() {
+         return studentProfile;
+    }
+    public void setStudentProfile(StudentProfile studentProfile) { 
+        this.studentProfile = studentProfile; 
+    }
 
     public Integer getTotalCases() {
          return totalCases; 
