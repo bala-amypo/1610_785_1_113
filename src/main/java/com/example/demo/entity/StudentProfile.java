@@ -28,7 +28,7 @@ public class StudentProfile {
 
     private LocalDateTime createdAt;
 
-    @OneToMany(mappedBy = "studentProfile")
+    @OneToOne(mappedBy = "studentProfile")
     private List<IntegrityCase> integrityCases;
 
     @PrePersist
