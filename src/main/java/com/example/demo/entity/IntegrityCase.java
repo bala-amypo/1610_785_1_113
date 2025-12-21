@@ -71,13 +71,25 @@ public class IntegrityCase {
     public String getDescription() { 
         return description; 
     }
-    public void setDescription(String description) { this.description = description; }
+    public void setDescription(String description) {
+         this.description = description; 
+    }
 
-    public String getStatus() { return status; }
-    public void setStatus(String status) { this.status = status; }
+    public String getStatus() {
+         return status; 
+    }
+    public void setStatus(String status) { 
+        this.status = status; 
+    }
 
-    public LocalDate getIncidentDate() { return incidentDate; }
-    public void setIncidentDate(LocalDate incidentDate) { this.incidentDate = incidentDate; }
+    public LocalDate getIncidentDate() { 
+        return incidentDate; 
+    }
+    public void setIncidentDate(LocalDate incidentDate) {
+         this.incidentDate = incidentDate; 
+    }
 
-    public LocalDateTime getCreatedAt() { return createdAt; }
+    public LocalDateTime getCreatedAt() {
+         return createdAt; 
+    }
 }
