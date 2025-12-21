@@ -31,7 +31,7 @@ public class StudentProfile {
 
     @NotNull(message = "Year level is mandatory")
     @Min(value = 1, message = "Year level must be at least 1")
-    @Max(value = 8, message = "Year level cannot exceed 8")
+    @Max(value = 4, message = "Year level cannot exceed 4")
     private Integer yearLevel;
 
     private Boolean repeatOffender;
