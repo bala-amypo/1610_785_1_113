@@ -90,4 +90,5 @@ public class StudentProfile {
     public LocalDateTime getCreatedAt() {
          return createdAt; 
     }
+    public StudentProfile(){}
 }
