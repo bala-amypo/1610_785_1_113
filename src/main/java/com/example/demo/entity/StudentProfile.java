@@ -1,4 +1,59 @@
 package com.example.demo.entity;
+
+import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
+
+import java.time.LocalDateTime;
+import java.util.List;
+
+@Entity
+@Table(name = "student_profile")
+public class StudentProfile {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @NotBlank(message = "Student identifier is mandatory")
+    @Column(unique = true, nullable = false)
+    private String studentId;
+
+    @NotBlank(message = "Student name is mandatory")
+    private String name;
+
+    @Email(message = "Email is not valid")
+    @NotBlank(message = "Email is mandatory")
+    @Column(unique = true)
+    private String email;
+
+    @NotBlank(message = "Program is mandatory")
+    private String program;
+
+    @NotNull(message = "Year level is mandatory")
+    @Min(value = 1, message = "Year level must be at least 1")
+    @Max(value = 8, message = "Year level cannot exceed 8")
+    private Integer yearLevel;
+
+    private Boolean isRepeatOffender = false;
+
+    private LocalDateTime createdAt;
+
+    @OneToMany(mappedBy = "studentProfile")
+    private List<IntegrityCase> integrityCases;
+
+    @PrePersist
+    public void onCreate() {
+        this.createdAt = LocalDateTime.now();
+    }
+
+    // getters & setters
+}                                                                                                                                                                             package com.example.demo.entity;
+
+
+
+
+
+
 import java.time.LocalDateTime;
 import java.util.List;
 
