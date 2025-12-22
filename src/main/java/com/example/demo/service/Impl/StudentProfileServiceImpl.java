@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 import com.example.demo.entity.StudentProfile;
 import com.example.demo.repository.StudentProfileRepository;
 import com.example.demo.service.StudentProfileService;
+import com.example.demo.exception.ValidationException;
+    
 
 @Service
 public class StudentProfileServiceImpl implements StudentProfileService {
@@ -44,4 +46,9 @@ public class StudentProfileServiceImpl implements StudentProfileService {
     public StudentProfile findByStudentIdentifier(String identifier) {
         return repo.findByStudentId(identifier).orElse(null);
     }
+
+    @Override
+      public StudentProfile getData(Long id){
+        return student.findById(id).orElseThrow(()->new ValidationException("Invalid Id" +id));
+      }
 }
