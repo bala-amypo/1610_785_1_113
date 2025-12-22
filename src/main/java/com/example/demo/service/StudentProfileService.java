@@ -18,7 +18,7 @@ public interface StudentProfileService {
 
 
 
-     StudentProfileEntity postData(StudentProfileEntity profile);
+     StudentProfile postData(StudentProfile profile);
 
-    StudentProfileEntity getData(Integer id);   
+    StudentProfile getData(Integer id);   
 }

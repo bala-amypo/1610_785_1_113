@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import com.example.demo.entity.StudentProfile;
 import com.example.demo.repository.StudentProfileRepository;
 import com.example.demo.service.StudentProfileService;
-import com.example.demo.exception.StudentNotFoundException;
+import com.example.demo.exception.StudentProfileNotFoundException;
     
 
 @Service
@@ -57,12 +57,12 @@ public class StudentProfileServiceImpl implements StudentProfileService {
 
 
        @Override
-    public StudentProfileEntity postData(StudentProfileEntity profile) {
+    public StudentProfile postData(StudentProfile profile) {
         return repo.save(profile);
     }
 
     @Override
-    public StudentProfileEntity getData(Integer id) {
+    public StudentProfile getData(Integer id) {
         return repo.findById(id)
                 .orElseThrow(() ->
                         new StudentProfileNotFoundException("StudentProfile ID not found : " + id));
