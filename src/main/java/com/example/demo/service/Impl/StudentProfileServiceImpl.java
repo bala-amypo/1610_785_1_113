@@ -47,10 +47,10 @@ public class StudentProfileServiceImpl implements StudentProfileService {
         return repo.findByStudentId(identifier).orElse(null);
     }
 
-    @Override
-      public StudentProfile getData(Long id){
-        return student.findById(id).orElseThrow(()->new ValidationException("Invalid Id" +id));
-      }
+    // @Override
+    //   public StudentProfile getData(Long id){
+    //     return student.findById(id).orElseThrow(()->new ValidationException("Invalid Id" +id));
+    //   }
 
 
 
@@ -62,7 +62,7 @@ public class StudentProfileServiceImpl implements StudentProfileService {
     }
 
     @Override
-    public StudentProfile getData(Integer id) {
+    public StudentProfile getData(Long id) {
         return repo.findById(id)
                 .orElseThrow(() ->
                         new StudentProfileNotFoundException("StudentProfile ID not found : " + id));
