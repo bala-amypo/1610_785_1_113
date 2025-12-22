@@ -47,10 +47,7 @@ public class StudentProfileServiceImpl implements StudentProfileService {
         return repo.findByStudentId(identifier).orElse(null);
     }
 
-    // @Override
-    //   public StudentProfile getData(Long id){
-    //     return student.findById(id).orElseThrow(()->new ValidationException("Invalid Id" +id));
-    //   }
+    
 
 
 

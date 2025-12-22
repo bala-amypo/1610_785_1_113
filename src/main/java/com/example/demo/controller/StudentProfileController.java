@@ -55,7 +55,7 @@ public class StudentProfileController {
 
     @GetMapping("/studentProfile/{id}")
     public StudentProfile getProfileById(@PathVariable Long id) {
-        return service.getData(id); // exception triggers here
+        return service.getData(id); 
     }
     
 } 
