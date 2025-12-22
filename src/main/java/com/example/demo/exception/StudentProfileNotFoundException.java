@@ -5,16 +5,17 @@ public class StudentProfileNotFoundException extends RuntimeException {
     public StudentProfileNotFoundException(String message) {
         super(message);
     }
-}  package com.example.demo.service;
+    }
+// }  package com.example.demo.service;
 
-import com.example.demo.entity.StudentProfileEntity;
+// import com.example.demo.entity.StudentProfileEntity;
 
-public interface StudentProfileService {
+// public interface StudentProfileService {
 
-    StudentProfileEntity postData(StudentProfileEntity profile);
+//     StudentProfileEntity postData(StudentProfileEntity profile);
 
-    StudentProfileEntity getData(Integer id);   // ID exception handled here
-}
+//     StudentProfileEntity getData(Integer id);   // ID exception handled here
+// }
  package com.example.demo.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;

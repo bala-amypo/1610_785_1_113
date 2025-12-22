@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import com.example.demo.entity.StudentProfile;
 import com.example.demo.repository.StudentProfileRepository;
 import com.example.demo.service.StudentProfileService;
-import com.example.demo.exception.ResourceNotFoundException;
+import com.example.demo.exception.StudentNotFoundException;
     
 
 @Service
@@ -51,4 +51,21 @@ public class StudentProfileServiceImpl implements StudentProfileService {
       public StudentProfile getData(Long id){
         return student.findById(id).orElseThrow(()->new ValidationException("Invalid Id" +id));
       }
+
+
+
+
+
+       @Override
+    public StudentProfileEntity postData(StudentProfileEntity profile) {
+        return repo.save(profile);
+    }
+
+    @Override
+    public StudentProfileEntity getData(Integer id) {
+        return repo.findById(id)
+                .orElseThrow(() ->
+                        new StudentProfileNotFoundException("StudentProfile ID not found : " + id));
+    }
 }
+

@@ -14,4 +14,11 @@ public interface StudentProfileService {
     StudentProfile updateRepeatStatus(Long studentId, boolean status);
 
     StudentProfile findByStudentIdentifier(String identifier);
-}  
+
+
+
+
+     StudentProfileEntity postData(StudentProfileEntity profile);
+
+    StudentProfileEntity getData(Integer id);   
+}

@@ -1,3 +1,4 @@
+
 package com.example.demo.exception;
 
 import org.springframework.http.HttpStatus;
@@ -8,13 +9,10 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(ResourceNotFoundException.class)
-    public ResponseEntity<String> handleNotFound(ResourceNotFoundException ex) {
+    @ExceptionHandler(StudentProfileNotFoundException.class)
+    public ResponseEntity<String> handleStudentProfileException(
+            StudentProfileNotFoundException ex) {
+
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
     }
-
-    @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<String> handleRuntime(RuntimeException ex) {
-        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
-    }
-}               
+}
