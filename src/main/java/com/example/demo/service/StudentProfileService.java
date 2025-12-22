@@ -18,7 +18,7 @@ public interface StudentProfileService {
 
 
 
-     StudentProfile postData(StudentProfile profile);
+    StudentProfile postData(StudentProfile profile);
 
     StudentProfile getData(Long id);   
 }
