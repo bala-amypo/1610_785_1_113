@@ -42,5 +42,23 @@ public class StudentProfileController {
     @GetMapping("ge1/lookup/{identifier}")
     public StudentProfile findByIdentifier(@PathVariable String identifier) {
         return service.findByStudentIdentifier(identifier);
+
     }
+
+
+
+         @PostMapping("/studentProfile")
+    public StudentProfile saveProfile(
+            @Valid @RequestBody StudentProfile profile) {
+        return service.postData(profile);
+    }
+
+    @GetMapping("/studentProfile/{id}")
+    public StudentProfile getProfileById(@PathVariable Integer id) {
+        return service.getData(id); // exception triggers here
+    }
+    
 } 
+
+
+

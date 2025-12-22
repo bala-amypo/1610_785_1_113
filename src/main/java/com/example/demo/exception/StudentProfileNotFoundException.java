@@ -16,74 +16,74 @@ public class StudentProfileNotFoundException extends RuntimeException {
 
 //     StudentProfileEntity getData(Integer id);   // ID exception handled here
 // }
- package com.example.demo.service.impl;
+//  package com.example.demo.service.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+// import org.springframework.beans.factory.annotation.Autowired;
+// import org.springframework.stereotype.Service;
 
-import com.example.demo.entity.StudentProfileEntity;
-import com.example.demo.repository.StudentProfileRepository;
-import com.example.demo.service.StudentProfileService;
-import com.example.demo.exception.StudentProfileNotFoundException;
+// import com.example.demo.entity.StudentProfileEntity;
+// import com.example.demo.repository.StudentProfileRepository;
+// import com.example.demo.service.StudentProfileService;
+// import com.example.demo.exception.StudentProfileNotFoundException;
 
-@Service
-public class StudentProfileServiceImpl implements StudentProfileService {
+// @Service
+// public class StudentProfileServiceImpl implements StudentProfileService {
 
-    @Autowired
-    private StudentProfileRepository repo;
+//     @Autowired
+//     private StudentProfileRepository repo;
 
-    @Override
-    public StudentProfileEntity postData(StudentProfileEntity profile) {
-        return repo.save(profile);
-    }
+//     @Override
+//     public StudentProfileEntity postData(StudentProfileEntity profile) {
+//         return repo.save(profile);
+//     }
 
-    @Override
-    public StudentProfileEntity getData(Integer id) {
-        return repo.findById(id)
-                .orElseThrow(() ->
-                        new StudentProfileNotFoundException("StudentProfile ID not found : " + id));
-    }
-}                         package com.example.demo.exception;
+//     @Override
+//     public StudentProfileEntity getData(Integer id) {
+//         return repo.findById(id)
+//                 .orElseThrow(() ->
+//                         new StudentProfileNotFoundException("StudentProfile ID not found : " + id));
+//     }
+// }                         package com.example.demo.exception;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.RestControllerAdvice;
+// import org.springframework.http.HttpStatus;
+// import org.springframework.http.ResponseEntity;
+// import org.springframework.web.bind.annotation.ExceptionHandler;
+// import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-@RestControllerAdvice
-public class GlobalExceptionHandler {
+// @RestControllerAdvice
+// public class GlobalExceptionHandler {
 
-    @ExceptionHandler(StudentProfileNotFoundException.class)
-    public ResponseEntity<String> handleStudentProfileException(
-            StudentProfileNotFoundException ex) {
+//     @ExceptionHandler(StudentProfileNotFoundException.class)
+//     public ResponseEntity<String> handleStudentProfileException(
+//             StudentProfileNotFoundException ex) {
 
-        return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
-    }
-}
- package com.example.demo.controller;
+//         return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
+//     }
+// }
+//  package com.example.demo.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+// import org.springframework.beans.factory.annotation.Autowired;
+// import org.springframework.web.bind.annotation.*;
 
-import com.example.demo.entity.StudentProfileEntity;
-import com.example.demo.service.StudentProfileService;
+// import com.example.demo.entity.StudentProfileEntity;
+// import com.example.demo.service.StudentProfileService;
 
-import jakarta.validation.Valid;
+// import jakarta.validation.Valid;
 
-@RestController
-public class StudentProfileController {
+// @RestController
+// public class StudentProfileController {
 
-    @Autowired
-    private StudentProfileService service;
+//     @Autowired
+//     private StudentProfileService service;
 
-    @PostMapping("/studentProfile")
-    public StudentProfileEntity saveProfile(
-            @Valid @RequestBody StudentProfileEntity profile) {
-        return service.postData(profile);
-    }
+//     @PostMapping("/studentProfile")
+//     public StudentProfileEntity saveProfile(
+//             @Valid @RequestBody StudentProfileEntity profile) {
+//         return service.postData(profile);
+//     }
 
-    @GetMapping("/studentProfile/{id}")
-    public StudentProfileEntity getProfileById(@PathVariable Integer id) {
-        return service.getData(id); // exception triggers here
-    }
-}
+//     @GetMapping("/studentProfile/{id}")
+//     public StudentProfileEntity getProfileById(@PathVariable Integer id) {
+//         return service.getData(id); // exception triggers here
+//     }
+// }
