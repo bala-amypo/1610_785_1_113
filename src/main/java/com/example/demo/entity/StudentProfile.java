@@ -1,5 +1,82 @@
 package com.example.demo.entity;
 
+import java.time.LocalDateTime;
+import java.util.List;
+
+import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+
+@Entity
+@Table(name = "student_profiles")
+public class StudentProfile {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @NotBlank(message = "studentId cannot be blank")
+    @Column(unique = true, nullable = false)
+    private String studentId;
+
+    @NotBlank(message = "name cannot be blank")
+    private String name;
+
+    @Email(message = "invalid email")
+    @Column(unique = true)
+    private String email;
+
+    private String program;
+
+    @NotNull(message = "yearLevel cannot be null")
+    private Integer yearLevel;
+
+    private Boolean repeatOffender = false;
+
+    private LocalDateTime createdAt;
+
+    @OneToMany(mappedBy = "studentProfile", cascade = CascadeType.ALL)
+    private List<IntegrityCase> integrityCases;
+
+    public StudentProfile() {
+    }
+
+    public StudentProfile(String studentId, String name, String email, String program, Integer yearLevel) {
+        this.studentId = studentId;
+        this.name = name;
+        this.email = email;
+        this.program = program;
+        this.yearLevel = yearLevel;
+    }
+
+    @PrePersist
+    public void onCreate() {
+        this.createdAt = LocalDateTime.now();
+        this.repeatOffender = false;
+    }
+
+    // Getters & setters
+    public Long getId() { return id; }
+    public Boolean getRepeatOffender() { return repeatOffender; }
+    public void setRepeatOffender(Boolean repeatOffender) { this.repeatOffender = repeatOffender; }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+package com.example.demo.entity;
+
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 

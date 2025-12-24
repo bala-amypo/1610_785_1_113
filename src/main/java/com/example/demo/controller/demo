@@ -1,0 +1,269 @@
+package com.example.demo.entity;
+
+import java.time.LocalDateTime;
+import java.util.List;
+
+import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+
+@Entity
+@Table(name = "student_profiles")
+public class StudentProfile {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @NotBlank(message = "studentId cannot be blank")
+    @Column(unique = true, nullable = false)
+    private String studentId;
+
+    @NotBlank(message = "name cannot be blank")
+    private String name;
+
+    @Email(message = "invalid email")
+    @Column(unique = true)
+    private String email;
+
+    private String program;
+
+    @NotNull(message = "yearLevel cannot be null")
+    private Integer yearLevel;
+
+    private Boolean repeatOffender = false;
+
+    private LocalDateTime createdAt;
+
+    @OneToMany(mappedBy = "studentProfile", cascade = CascadeType.ALL)
+    private List<IntegrityCase> integrityCases;
+
+    public StudentProfile() {
+    }
+
+    public StudentProfile(String studentId, String name, String email, String program, Integer yearLevel) {
+        this.studentId = studentId;
+        this.name = name;
+        this.email = email;
+        this.program = program;
+        this.yearLevel = yearLevel;
+    }
+
+    @PrePersist
+    public void onCreate() {
+        this.createdAt = LocalDateTime.now();
+        this.repeatOffender = false;
+    }
+
+    // Getters & setters
+    public Long getId() { return id; }
+    public Boolean getRepeatOffender() { return repeatOffender; }
+    public void setRepeatOffender(Boolean repeatOffender) { this.repeatOffender = repeatOffender; }
+} 0000000         package com.example.demo.entity;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
+
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+
+@Entity
+@Table(name = "integrity_cases")
+public class IntegrityCase {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @NotNull(message = "studentProfile cannot be null")
+    @ManyToOne(optional = false)
+    private StudentProfile studentProfile;
+
+    @NotBlank(message = "courseCode cannot be blank")
+    private String courseCode;
+
+    private String instructorName;
+
+    private String description;
+
+    private String status = "OPEN";
+
+    @NotNull(message = "incidentDate cannot be null")
+    private LocalDate incidentDate;
+
+    private LocalDateTime createdAt;
+
+    @OneToMany(mappedBy = "integrityCase", cascade = CascadeType.ALL)
+    private List<EvidenceRecord> evidenceRecords;
+
+    @OneToMany(mappedBy = "integrityCase", cascade = CascadeType.ALL)
+    private List<PenaltyAction> penalties;
+
+    public IntegrityCase() {
+    }
+
+    @PrePersist
+    public void onCreate() {
+        this.createdAt = LocalDateTime.now();
+        if (this.status == null) {
+            this.status = "OPEN";
+        }
+    }
+
+    public Long getId() { return id; }
+    public String getStatus() { return status; }
+    public void setStatus(String status) { this.status = status; }
+}
+ package com.example.demo.entity;
+
+import java.time.LocalDateTime;
+
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+
+@Entity
+@Table(name = "evidence_records")
+public class EvidenceRecord {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @NotNull(message = "integrityCase cannot be null")
+    @ManyToOne(optional = false)
+    private IntegrityCase integrityCase;
+
+    @NotBlank(message = "evidenceType cannot be blank")
+    private String evidenceType;
+
+    @NotBlank(message = "content cannot be blank")
+    private String content;
+
+    private String submittedBy;
+
+    private LocalDateTime submittedAt;
+
+    public EvidenceRecord() {
+    }
+
+    @PrePersist
+    public void onCreate() {
+        this.submittedAt = LocalDateTime.now();
+    }
+}                             00000000000000package com.example.demo.entity;
+
+import java.time.LocalDateTime;
+
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+
+@Entity
+@Table(name = "penalty_actions")
+public class PenaltyAction {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @NotNull(message = "integrityCase cannot be null")
+    @ManyToOne(optional = false)
+    private IntegrityCase integrityCase;
+
+    @NotBlank(message = "penaltyType cannot be blank")
+    private String penaltyType;
+
+    private String details;
+
+    private String issuedBy;
+
+    private LocalDateTime issuedAt;
+
+    public PenaltyAction() {
+    }
+
+    @PrePersist
+    public void onCreate() {
+        this.issuedAt = LocalDateTime.now();
+    }
+}
+ package com.example.demo.entity;
+
+import java.time.LocalDate;
+
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Min;
+
+@Entity
+@Table(name = "repeat_offender_records")
+public class RepeatOffenderRecord {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @NotNull(message = "studentProfile cannot be null")
+    @ManyToOne(optional = false)
+    private StudentProfile studentProfile;
+
+    @NotNull(message = "totalCases cannot be null")
+    @Min(value = 1, message = "totalCases must be at least 1")
+    private Integer totalCases;
+
+    private LocalDate lastIncidentDate;
+
+    @NotBlank(message = "flagSeverity cannot be blank")
+    private String flagSeverity;
+
+    public RepeatOffenderRecord() {
+    }
+
+    public RepeatOffenderRecord(StudentProfile studentProfile, Integer totalCases, String flagSeverity) {
+        this.studentProfile = studentProfile;
+        this.totalCases = totalCases;
+        this.flagSeverity = flagSeverity;
+    }
+
+    // Getters & Setters
+    public Long getId() {
+        return id;
+    }
+
+    public StudentProfile getStudentProfile() {
+        return studentProfile;
+    }
+
+    public void setStudentProfile(StudentProfile studentProfile) {
+        this.studentProfile = studentProfile;
+    }
+
+    public Integer getTotalCases() {
+        return totalCases;
+    }
+
+    public void setTotalCases(Integer totalCases) {
+        this.totalCases = totalCases;
+    }
+
+    public LocalDate getLastIncidentDate() {
+        return lastIncidentDate;
+    }
+
+    public void setLastIncidentDate(LocalDate lastIncidentDate) {
+        this.lastIncidentDate = lastIncidentDate;
+    }
+
+    public String getFlagSeverity() {
+        return flagSeverity;
+    }
+
+    public void setFlagSeverity(String flagSeverity) {
+        this.flagSeverity = flagSeverity;
+    }
+}  
