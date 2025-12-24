@@ -1,46 +1,59 @@
-package com.example.demo.entity;
 
-import jakarta.persistence.*;
-import jakarta.validation.constraints.*;
+
+package com.example.demo.entity;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
+
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 @Entity
-@Table(name = "integrity_case")
+@Table(name = "integrity_cases")
 public class IntegrityCase {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull(message = "Student profile is mandatory")
-    @ManyToOne
-    @JoinColumn(name = "student_id")
+    @NotNull(message = "studentProfile cannot be null")
+    @ManyToOne(optional = false)
     private StudentProfile studentProfile;
 
-    @NotBlank(message = "Course code is mandatory")
+    @NotBlank(message = "courseCode cannot be blank")
     private String courseCode;
 
-    @NotBlank(message = "Instructor name is mandatory")
     private String instructorName;
 
-    @NotBlank(message = "Case description is mandatory")
     private String description;
 
-    private String status;
+    private String status = "OPEN";
 
-    @NotNull(message = "Incident date is mandatory")
+    @NotNull(message = "incidentDate cannot be null")
     private LocalDate incidentDate;
 
     private LocalDateTime createdAt;
 
+    @OneToMany(mappedBy = "integrityCase", cascade = CascadeType.ALL)
+    private List<EvidenceRecord> evidenceRecords;
+
+    @OneToMany(mappedBy = "integrityCase", cascade = CascadeType.ALL)
+    private List<PenaltyAction> penalties;
+
+    public IntegrityCase() {
+    }
 
     @PrePersist
-    public void prePersist() {
+    public void onCreate() {
         this.createdAt = LocalDateTime.now();
-        this.status = "OPEN";
+        if (this.status == null) {
+            this.status = "OPEN";
+        }
     }
+
+
 
     public Long getId() { 
         return id; 
