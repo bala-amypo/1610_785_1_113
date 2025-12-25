@@ -48,3 +48,46 @@ public class PenaltyActionServiceImpl implements PenaltyActionService {
         repository.deleteById(id);
     }
 }
+
+
+
+
+
+package com.example.demo.service.impl;
+
+import com.example.demo.entity.PenaltyAction;
+import com.example.demo.repository.PenaltyActionRepository;
+import com.example.demo.service.PenaltyActionService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Optional;
+
+@Service
+public class PenaltyActionServiceImpl implements PenaltyActionService {
+
+    @Autowired
+    private PenaltyActionRepository repository;
+
+    @Override
+    public PenaltyAction addPenalty(PenaltyAction penalty) {
+        return repository.save(penalty);
+    }
+
+    @Override
+    public List<PenaltyAction> getAllPenalties() {
+        return repository.findAll();
+    }
+
+    @Override
+    public PenaltyAction getPenaltyById(Long id) {
+        Optional<PenaltyAction> penalty = repository.findById(id);
+        return penalty.orElse(null); // or throw custom exception
+    }
+
+    @Override
+    public List<PenaltyAction> getPenaltiesByCase(Long caseId) {
+        return repository.findByIntegrityCaseId(caseId);
+    }
+} 
