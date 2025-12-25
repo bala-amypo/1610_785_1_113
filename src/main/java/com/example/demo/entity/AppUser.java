@@ -27,4 +27,14 @@ public class AppUser {
 
     public Set<Role> getRoles() { return roles; }
     public void setRoles(Set<Role> roles) { this.roles = roles; }
+
+    public String getEmail() {       // ✅ ADD
+        return email;
+    }
+
+    public void setEmail(String email) { // ✅ ADD
+        this.email = email;
+    }
+
 } 
+
