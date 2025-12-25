@@ -1,15 +1,18 @@
- package com.example.demo.service;
 
-import java.util.List;
+package com.example.demo.service;
+
 import com.example.demo.entity.PenaltyAction;
+import java.util.List;
 
 public interface PenaltyActionService {
 
-    PenaltyAction addPenalty(PenaltyAction penaltyAction);
+    List<PenaltyAction> getAllPenalties(); // must match impl method name
 
     PenaltyAction getPenaltyById(Long id);
 
-    List<PenaltyAction> getPenaltiesByCase(Long caseId);
+    PenaltyAction savePenalty(PenaltyAction action);
 
-    List<PenaltyAction> getAllPenalties();
-} 
+    PenaltyAction updatePenalty(Long id, PenaltyAction action);
+
+    void deletePenalty(Long id);
+}  

@@ -16,23 +16,23 @@ public class PenaltyActionServiceImpl implements PenaltyActionService {
     private PenaltyActionRepository repository;
 
     @Override
-    public List<PenaltyAction> getAllActions() {
+    public List<PenaltyAction> getAllPenalties() {
         return repository.findAll();
     }
 
     @Override
-    public PenaltyAction getActionById(Long id) {
+    public PenaltyAction getPenaltyById(Long id) {
         Optional<PenaltyAction> action = repository.findById(id);
         return action.orElseThrow(() -> new RuntimeException("PenaltyAction not found with id: " + id));
     }
 
     @Override
-    public PenaltyAction saveAction(PenaltyAction action) {
+    public PenaltyAction savePenalty(PenaltyAction action) {
         return repository.save(action);
     }
 
     @Override
-    public PenaltyAction updateAction(Long id, PenaltyAction action) {
+    public PenaltyAction updatePenalty(Long id, PenaltyAction action) {
         PenaltyAction existingAction = repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("PenaltyAction not found with id: " + id));
 
@@ -44,7 +44,7 @@ public class PenaltyActionServiceImpl implements PenaltyActionService {
     }
 
     @Override
-    public void deleteAction(Long id) {
+    public void deletePenalty(Long id) {
         repository.deleteById(id);
     }
 }
