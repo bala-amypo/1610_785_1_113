@@ -1,18 +1,43 @@
-package com.example.demo.repository;
+package com.example.demo.dto;
 
-import java.util.Optional;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 
-import org.springframework.data.jpa.repository.JpaRepository;
-import com.example.demo.entity.AppUser;
+public class AuthRequest {
 
-public interface AppUserRepository extends JpaRepository<AppUser, Long> {
+    @NotBlank
+    @Email
+    private String email;   // ✅ FIELD WAS MISSING
 
-    Optional<AppUser> findByEmail(String email); // ✅ ADD THIS
-}               000000000000   package com.example.demo.entity;
+    @NotBlank
+    private String password;
+
+    // ✅ NO-ARGS CONSTRUCTOR
+    public AuthRequest() {
+    }
+
+    // ✅ GETTERS & SETTERS
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+}           000000000000     package com.example.demo.entity; 
 
 import jakarta.persistence.*;
 
 @Entity
+@Table(name = "users")
 public class AppUser {
 
     @Id
@@ -20,11 +45,22 @@ public class AppUser {
     private Long id;
 
     @Column(unique = true, nullable = false)
-    private String email;
+    private String email;   // ✅ FIELD WAS MISSING
 
+    @Column(nullable = false)
     private String password;
 
-    // ✅ REQUIRED getters & setters
+    // ✅ NO-ARGS CONSTRUCTOR (REQUIRED BY JPA)
+    public AppUser() {
+    }
+
+    // ✅ PARAMETERIZED CONSTRUCTOR (USED IN SERVICE)
+    public AppUser(String email, String password) {
+        this.email = email;
+        this.password = password;
+    }
+
+    // ✅ GETTERS & SETTERS
     public Long getId() {
         return id;
     }
@@ -33,11 +69,11 @@ public class AppUser {
         this.id = id;
     }
 
-    public String getEmail() {       // ✅ ADD
+    public String getEmail() {
         return email;
     }
 
-    public void setEmail(String email) { // ✅ ADD
+    public void setEmail(String email) {
         this.email = email;
     }
 
@@ -49,57 +85,16 @@ public class AppUser {
         this.password = password;
     }
 }
- package com.example.demo.dto;
+ package com.example.demo.repository;
 
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
+import java.util.Optional;
 
-public class AuthRequest {
+import org.springframework.data.jpa.repository.JpaRepository;
+import com.example.demo.entity.AppUser;
 
-    @NotBlank
-    @Email
-    private String email;
+public interface AppUserRepository extends JpaRepository<AppUser, Long> {
 
-    @NotBlank
-    private String password;
+    Optional<AppUser> findByEmail(String email);
 
-    // ✅ getters & setters
-    public String getEmail() {      // ✅ ADD
-        return email;
-    }
-
-    public void setEmail(String email) { // ✅ ADD
-        this.email = email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-}              00000000000 <dependencies>
-
-    <dependency>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-web</artifactId>
-    </dependency>
-
-    <dependency>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-validation</artifactId>
-    </dependency>
-
-    <dependency>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-security</artifactId>
-    </dependency>
-
-    <dependency>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-data-jpa</artifactId>
-    </dependency>
-
-</dependencies>
- 
+    boolean existsByEmail(String email); // ✅ ADD THIS
+}
