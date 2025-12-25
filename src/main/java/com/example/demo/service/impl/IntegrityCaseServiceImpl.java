@@ -1,3 +1,4 @@
+
 package com.example.demo.service.impl;
 
 import java.util.List;
@@ -44,9 +45,8 @@ public class IntegrityCaseServiceImpl implements IntegrityCaseService {
     }
 
     @Override
-    public List<IntegrityCase> getCasesByStudent(String studentId) {
-        // StudentProfile.studentId is a String
-        StudentProfile s = studentRepo.findByStudentId(studentId)
+    public List<IntegrityCase> getCasesByStudent(Long studentId) {
+        StudentProfile s = studentRepo.findById(studentId)
                 .orElseThrow(() -> new ResourceNotFoundException("Student not found"));
         return caseRepo.findByStudentProfile(s);
     }
