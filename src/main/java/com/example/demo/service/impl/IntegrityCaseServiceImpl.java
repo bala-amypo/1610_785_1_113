@@ -1,7 +1,10 @@
-  package com.example.demo.service.impl;
+package com.example.demo.service.impl;
 
 import java.util.List;
 import java.util.Optional;
+
+import org.springframework.stereotype.Service;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.example.demo.entity.IntegrityCase;
 import com.example.demo.entity.StudentProfile;
@@ -10,15 +13,16 @@ import com.example.demo.repository.IntegrityCaseRepository;
 import com.example.demo.repository.StudentProfileRepository;
 import com.example.demo.service.IntegrityCaseService;
 
+@Service
 public class IntegrityCaseServiceImpl implements IntegrityCaseService {
 
     private final IntegrityCaseRepository caseRepo;
     private final StudentProfileRepository studentRepo;
 
+    @Autowired
     public IntegrityCaseServiceImpl(
             IntegrityCaseRepository caseRepo,
             StudentProfileRepository studentRepo) {
-
         this.caseRepo = caseRepo;
         this.studentRepo = studentRepo;
     }
@@ -40,8 +44,9 @@ public class IntegrityCaseServiceImpl implements IntegrityCaseService {
     }
 
     @Override
-    public List<IntegrityCase> getCasesByStudent(Long studentId) {
-        StudentProfile s = studentRepo.findById(studentId)
+    public List<IntegrityCase> getCasesByStudent(String studentId) {
+        // StudentProfile.studentId is a String
+        StudentProfile s = studentRepo.findByStudentId(studentId)
                 .orElseThrow(() -> new ResourceNotFoundException("Student not found"));
         return caseRepo.findByStudentProfile(s);
     }
