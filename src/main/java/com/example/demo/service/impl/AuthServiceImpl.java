@@ -80,7 +80,7 @@ public class AuthServiceImpl implements AuthService {
         // );
 
 
-         String token = jwtTokenProvider.generateToken(user.getEmail()); 
+        //  String token = jwtTokenProvider.generateToken(user.getEmail()); 
 
         return new AuthResponse(token, user.getId(), user.getEmail(), role);
     }
