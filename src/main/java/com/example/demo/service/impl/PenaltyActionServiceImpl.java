@@ -1,57 +1,45 @@
- package com.example.demo.service.impl;
+ package com.example.demo.controller;
 
 import java.util.List;
 
-import com.example.demo.entity.IntegrityCase;
+import jakarta.validation.Valid;
+
+import org.springframework.web.bind.annotation.*;
+
 import com.example.demo.entity.PenaltyAction;
-import com.example.demo.exception.ResourceNotFoundException;
-import com.example.demo.repository.IntegrityCaseRepository;
-import com.example.demo.repository.PenaltyActionRepository;
 import com.example.demo.service.PenaltyActionService;
 
-public class PenaltyActionServiceImpl implements PenaltyActionService {
+@RestController
+@RequestMapping("/penalties")
+public class PenaltyActionController {
 
-    private final PenaltyActionRepository penaltyRepo;
-    private final IntegrityCaseRepository caseRepo;
+    private final PenaltyActionService service;
 
-    public PenaltyActionServiceImpl(
-            PenaltyActionRepository penaltyRepo,
-            IntegrityCaseRepository caseRepo) {
-
-        this.penaltyRepo = penaltyRepo;
-        this.caseRepo = caseRepo;
+    public PenaltyActionController(PenaltyActionService service) {
+        this.service = service;
     }
 
-    @Override
-    public PenaltyAction addPenalty(PenaltyAction penaltyAction) {
-
-        Long caseId = penaltyAction.getIntegrityCase().getId();
-
-        IntegrityCase integrityCase = caseRepo.findById(caseId)
-                .orElseThrow(() -> new ResourceNotFoundException("Case not found"));
-
-        integrityCase.setStatus("UNDER_REVIEW");
-        caseRepo.save(integrityCase);
-
-        penaltyAction.setIntegrityCase(integrityCase);
-        return penaltyRepo.save(penaltyAction);
+    // add penalty
+    @PostMapping
+    public PenaltyAction add(@Valid @RequestBody PenaltyAction action) {
+        return service.addPenalty(action);
     }
 
-    @Override
-    public PenaltyAction getPenaltyById(Long id) {
-        return penaltyRepo.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Penalty not found"));
+    // get by id
+    @GetMapping("/{id}")
+    public PenaltyAction getById(@PathVariable Long id) {
+        return service.getPenaltyById(id);
     }
 
-    @Override
-    public List<PenaltyAction> getPenaltiesByCase(Long caseId) {
-        IntegrityCase c = caseRepo.findById(caseId)
-                .orElseThrow(() -> new ResourceNotFoundException("Case not found"));
-        return penaltyRepo.findByIntegrityCase(c);
+    // get by case
+    @GetMapping("/case/{caseId}")
+    public List<PenaltyAction> getByCase(@PathVariable Long caseId) {
+        return service.getPenaltiesByCase(caseId);
     }
 
-    @Override
-    public List<PenaltyAction> getAllPenalties() {
-        return penaltyRepo.findAll();
+    // get all
+    @GetMapping
+    public List<PenaltyAction> getAll() {
+        return service.getAllPenalties();
     }
 }

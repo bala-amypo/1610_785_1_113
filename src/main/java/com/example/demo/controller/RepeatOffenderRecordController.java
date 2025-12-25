@@ -1,32 +1,37 @@
-package com.example.demo.controller;
+ package com.example.demo.controller;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import com.example.demo.entity.RepeatOffenderRecord;
 import com.example.demo.service.RepeatOffenderRecordService;
 
 @RestController
-@RequestMapping("/api/repeat-offenders")
+@RequestMapping("/repeat-offenders")
 public class RepeatOffenderRecordController {
 
-    @Autowired
-    private RepeatOffenderRecordService service;
+    private final RepeatOffenderRecordService service;
 
-    @PostMapping("p2/refresh/{studentId}")
-    public RepeatOffenderRecord refreshRecord(@PathVariable Long studentId) {
-        return service.refreshRepeatOffenderData(studentId);
+    public RepeatOffenderRecordController(RepeatOffenderRecordService service) {
+        this.service = service;
     }
 
-    @GetMapping("g2/student/{studentId}")
-    public RepeatOffenderRecord getRecordByStudent(@PathVariable Long studentId) {
-        return service.getRecordByStudent(studentId);
+    // recalculate
+    @PutMapping("/{studentId}")
+    public RepeatOffenderRecord recalculate(@PathVariable Long studentId) {
+        return service.recalculateRepeatOffender(studentId);
     }
 
-    @GetMapping("ge2")
-    public List<RepeatOffenderRecord> getAllRepeatOffenders() {
+    // get by student
+    @GetMapping("/student/{studentId}")
+    public RepeatOffenderRecord getByStudent(@PathVariable Long studentId) {
+        return service.getByStudentId(studentId);
+    }
+
+    // get all
+    @GetMapping
+    public List<RepeatOffenderRecord> getAll() {
         return service.getAllRepeatOffenders();
     }
-}   
+}
