@@ -2,6 +2,8 @@ package com.example.demo.service.impl;
 
 import java.util.List;
 
+import org.springframework.stereotype.Service;
+
 import com.example.demo.entity.IntegrityCase;
 import com.example.demo.entity.RepeatOffenderRecord;
 import com.example.demo.entity.StudentProfile;
@@ -12,6 +14,7 @@ import com.example.demo.repository.StudentProfileRepository;
 import com.example.demo.service.StudentProfileService;
 import com.example.demo.util.RepeatOffenderCalculator;
 
+@Service  // make it a Spring bean
 public class StudentProfileServiceImpl implements StudentProfileService {
 
     private final StudentProfileRepository studentRepo;
@@ -68,10 +71,10 @@ public class StudentProfileServiceImpl implements StudentProfileService {
         return studentRepo.save(student);
     }
 
-    // 5️⃣ Get by studentIdentifier (EXTERNAL ID)
+    // 5️⃣ Get by studentId (repository method updated)
     @Override
-    public StudentProfile getStudentByStudentIdentifier(String studentIdentifier) {
-        return studentRepo.findByStudentIdentifier(studentIdentifier)
+    public StudentProfile getStudentByStudentIdentifier(String studentId) {
+        return studentRepo.findByStudentId(studentId)
                 .orElseThrow(() -> new ResourceNotFoundException("Student not found"));
     }
 }
