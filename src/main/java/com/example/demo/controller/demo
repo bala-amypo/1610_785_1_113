@@ -1,231 +1,251 @@
-package com.example.demo.controller;
+package com.example.demo.dto;
 
-import java.util.List;
+import jakarta.validation.constraints.NotBlank;
 
-import jakarta.validation.Valid;
+public class LoginRequest {
 
-import org.springframework.web.bind.annotation.*;
+    @NotBlank
+    private String email;
 
-import com.example.demo.entity.StudentProfile;
-import com.example.demo.service.StudentProfileService;
+    @NotBlank
+    private String password;
 
-@RestController
-@RequestMapping("/students")
-public class StudentProfileController {
-
-    private final StudentProfileService service;
-
-    public StudentProfileController(StudentProfileService service) {
-        this.service = service;
+    public LoginRequest() {
     }
 
-    // 1️⃣ create student
-    @PostMapping
-    public StudentProfile createStudent(@Valid @RequestBody StudentProfile student) {
-        return service.createStudent(student);
+    public String getEmail() {
+        return email;
     }
 
-    // 2️⃣ get by id
-    @GetMapping("/{id}")
-    public StudentProfile getStudentById(@PathVariable Long id) {
-        return service.getStudentById(id);
+    public void setEmail(String email) {
+        this.email = email;
     }
 
-    // 3️⃣ get all students
-    @GetMapping
-    public List<StudentProfile> getAllStudents() {
-        return service.getAllStudents();
+    public String getPassword() {
+        return password;
+    }
+ 
+    public void setPassword(String password) {
+        this.password = password;
+    }
+}                    00000000 package com.example.demo.dto;
+
+import jakarta.validation.constraints.NotBlank;
+
+public class RegisterRequest {
+
+    @NotBlank
+    private String email;
+
+    @NotBlank
+    private String password;
+
+    public RegisterRequest() {
     }
 
-    // 4️⃣ update repeat offender status
-    @PutMapping("/{id}/repeat-status")
-    public StudentProfile updateRepeatStatus(@PathVariable Long id) {
-        return service.updateRepeatOffenderStatus(id);
+    public String getEmail() {
+        return email;
     }
-
-    // 5️⃣ get by studentIdentifier
-    @GetMapping("/identifier/{studentIdentifier}")
-    public StudentProfile getByStudentIdentifier(
-            @PathVariable String studentIdentifier) {
-        return service.getStudentByStudentIdentifier(studentIdentifier);
+ 
+    public void setEmail(String email) {
+        this.email = email;
     }
-}      000000000       package com.example.demo.controller;
-
-import java.util.List;
-import java.util.Optional;
-
-import jakarta.validation.Valid;
-
-import org.springframework.web.bind.annotation.*;
-
-import com.example.demo.entity.IntegrityCase;
-import com.example.demo.service.IntegrityCaseService;
-
-@RestController
-@RequestMapping("/cases")
-public class IntegrityCaseController {
-
-    private final IntegrityCaseService service;
-
-    public IntegrityCaseController(IntegrityCaseService service) {
-        this.service = service;
+ 
+    public String getPassword() {
+        return password;
     }
-
-    // create case
-    @PostMapping
-    public IntegrityCase createCase(@Valid @RequestBody IntegrityCase integrityCase) {
-        return service.createCase(integrityCase);
-    }
-
-    // update status
-    @PutMapping("/{id}/status")
-    public IntegrityCase updateStatus(
-            @PathVariable Long id,
-            @RequestParam String status) {
-        return service.updateCaseStatus(id, status);
-    }
-
-    // get by student
-    @GetMapping("/student/{studentId}")
-    public List<IntegrityCase> getCasesByStudent(@PathVariable Long studentId) {
-        return service.getCasesByStudent(studentId);
-    }
-
-    // get by id
-    @GetMapping("/{id}")
-    public Optional<IntegrityCase> getById(@PathVariable Long id) {
-        return service.getCaseById(id);
-    }
-
-    // get all
-    @GetMapping
-    public List<IntegrityCase> getAll() {
-        return service.getAllCases();
+ 
+    public void setPassword(String password) {
+        this.password = password;
     }
 }
- package com.example.demo.controller;
+ package com.example.demo.dto;
 
-import java.util.List;
+public class JwtResponse {
 
-import jakarta.validation.Valid;
+    private String token;
 
-import org.springframework.web.bind.annotation.*;
-
-import com.example.demo.entity.EvidenceRecord;
-import com.example.demo.service.EvidenceRecordService;
-
-@RestController
-@RequestMapping("/evidence")
-public class EvidenceRecordController {
-
-    private final EvidenceRecordService service;
-
-    public EvidenceRecordController(EvidenceRecordService service) {
-        this.service = service;
+    public JwtResponse() {
     }
 
-    // submit evidence
-    @PostMapping
-    public EvidenceRecord submit(@Valid @RequestBody EvidenceRecord record) {
-        return service.submitEvidence(record);
+    public JwtResponse(String token) {
+        this.token = token;
     }
 
-    // get by id
-    @GetMapping("/{id}")
-    public EvidenceRecord getById(@PathVariable Long id) {
-        return service.getEvidenceById(id);
+    public String getToken() {
+        return token;
+    }
+ 
+    public void setToken(String token) {
+        this.token = token;
+    }
+}                            00000000000   package com.example.demo.security;
+
+import java.util.Date;
+
+import org.springframework.stereotype.Component;
+
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
+
+@Component
+public class JwtTokenProvider {
+
+    private final String secretKey = "secret";
+    private final long validity = 86400000; // 1 day
+
+    public String generateToken(String email) {
+
+        Date now = new Date();
+        Date expiry = new Date(now.getTime() + validity);
+
+        return Jwts.builder()
+                .setSubject(email)
+                .setIssuedAt(now)
+                .setExpiration(expiry)
+                .signWith(SignatureAlgorithm.HS256, secretKey)
+                .compact();
     }
 
-    // get by case
-    @GetMapping("/case/{caseId}")
-    public List<EvidenceRecord> getByCase(@PathVariable Long caseId) {
-        return service.getEvidenceByCase(caseId);
-    }
-
-    // get all
-    @GetMapping
-    public List<EvidenceRecord> getAll() {
-        return service.getAllEvidence();
-    }
-}          000000           package com.example.demo.controller;
-
-import java.util.List;
-
-import jakarta.validation.Valid;
-
-import org.springframework.web.bind.annotation.*;
-
-import com.example.demo.entity.PenaltyAction;
-import com.example.demo.service.PenaltyActionService;
-
-@RestController
-@RequestMapping("/penalties")
-public class PenaltyActionController {
-
-    private final PenaltyActionService service;
-
-    public PenaltyActionController(PenaltyActionService service) {
-        this.service = service;
-    }
-
-    // add penalty
-    @PostMapping
-    public PenaltyAction add(@Valid @RequestBody PenaltyAction action) {
-        return service.addPenalty(action);
-    }
-
-    // get by id
-    @GetMapping("/{id}")
-    public PenaltyAction getById(@PathVariable Long id) {
-        return service.getPenaltyById(id);
-    }
-
-    // get by case
-    @GetMapping("/case/{caseId}")
-    public List<PenaltyAction> getByCase(@PathVariable Long caseId) {
-        return service.getPenaltiesByCase(caseId);
-    }
-
-    // get all
-    @GetMapping
-    public List<PenaltyAction> getAll() {
-        return service.getAllPenalties();
+    public String getEmailFromToken(String token) {
+        return Jwts.parser()
+                .setSigningKey(secretKey)
+                .parseClaimsJws(token)
+                .getBody()
+                .getSubject();
     }
 }
- package com.example.demo.controller;
+ package com.example.demo.security;
 
-import java.util.List;
+import org.springframework.security.core.userdetails.*;
+import org.springframework.stereotype.Service;
+
+import com.example.demo.entity.AppUser;
+import com.example.demo.repository.AppUserRepository;
+
+@Service
+public class CustomUserDetailsService implements UserDetailsService {
+
+    private final AppUserRepository userRepo;
+
+    public CustomUserDetailsService(AppUserRepository userRepo) {
+        this.userRepo = userRepo;
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String email)
+            throws UsernameNotFoundException {
+
+        AppUser user = userRepo.findByEmail(email)
+                .orElseThrow(() ->
+                        new UsernameNotFoundException("User not found"));
+
+        return User.builder()
+                .username(user.getEmail())
+                .password(user.getPassword())
+                .roles("USER")
+                .build();
+    }
+}                             000000000       package com.example.demo.security;
+
+import java.io.IOException;
+
+import jakarta.servlet.*;
+import jakarta.servlet.http.*;
+
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.filter.OncePerRequestFilter;
+
+public class JwtAuthenticationFilter extends OncePerRequestFilter {
+
+    private final JwtTokenProvider tokenProvider;
+    private final CustomUserDetailsService userDetailsService;
+
+    public JwtAuthenticationFilter(
+            JwtTokenProvider tokenProvider,
+            CustomUserDetailsService userDetailsService) {
+        this.tokenProvider = tokenProvider;
+        this.userDetailsService = userDetailsService;
+    }
+
+    @Override
+    protected void doFilterInternal(
+            HttpServletRequest request,
+            HttpServletResponse response,
+            FilterChain filterChain)
+            throws ServletException, IOException {
+
+        String header = request.getHeader("Authorization");
+
+        if (header != null && header.startsWith("Bearer ")) {
+            String token = header.substring(7);
+            String email = tokenProvider.getEmailFromToken(token);
+
+            UserDetails userDetails =
+                    userDetailsService.loadUserByUsername(email);
+
+            UsernamePasswordAuthenticationToken auth =
+                    new UsernamePasswordAuthenticationToken(
+                            userDetails, null, userDetails.getAuthorities());
+
+            SecurityContextHolder.getContext().setAuthentication(auth);
+        }
+
+        filterChain.doFilter(request, response);
+    }
+}
+ package com.example.demo.security;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
+
+@Configuration
+public class SecurityConfig {
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http)
+            throws Exception {
+
+        http
+            .csrf(csrf -> csrf.disable())
+            .authorizeHttpRequests(auth -> auth
+                .requestMatchers("/auth/**").permitAll()
+                .anyRequest().authenticated()
+            );
+
+        return http.build();
+    }
+}                           000000 package com.example.demo.exception;
+
+public class ResourceNotFoundException extends RuntimeException {
+
+    public ResourceNotFoundException(String message) {
+        super(message);
+    }
+}
+ package com.example.demo.exception;
 
 import org.springframework.web.bind.annotation.*;
 
-import com.example.demo.entity.RepeatOffenderRecord;
-import com.example.demo.service.RepeatOffenderRecordService;
+import org.springframework.http.*;
 
-@RestController
-@RequestMapping("/repeat-offenders")
-public class RepeatOffenderRecordController {
+@RestControllerAdvice
+public class GlobalExceptionHandler {
 
-    private final RepeatOffenderRecordService service;
-
-    public RepeatOffenderRecordController(RepeatOffenderRecordService service) {
-        this.service = service;
-    }
-
-    // recalculate
-    @PutMapping("/{studentId}")
-    public RepeatOffenderRecord recalculate(@PathVariable Long studentId) {
-        return service.recalculateRepeatOffender(studentId);
-    }
-
-    // get by student
-    @GetMapping("/student/{studentId}")
-    public RepeatOffenderRecord getByStudent(@PathVariable Long studentId) {
-        return service.getByStudentId(studentId);
-    }
-
-    // get all
-    @GetMapping
-    public List<RepeatOffenderRecord> getAll() {
-        return service.getAllRepeatOffenders();
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<String> handleNotFound(
+            ResourceNotFoundException ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
     }
 }
