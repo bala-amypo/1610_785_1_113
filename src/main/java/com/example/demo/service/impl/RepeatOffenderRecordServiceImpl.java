@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Service   // 🔥 THIS IS MANDATORY
+@Service
 public class RepeatOffenderRecordServiceImpl implements RepeatOffenderRecordService {
 
     private final StudentProfileRepository studentProfileRepository;
@@ -28,6 +28,7 @@ public class RepeatOffenderRecordServiceImpl implements RepeatOffenderRecordServ
         this.calculator = calculator;
     }
 
+    // ✅ REQUIRED METHOD 1
     @Override
     public RepeatOffenderRecord generateRecord(Long studentId) {
         StudentProfile student = studentProfileRepository.findById(studentId)
@@ -40,5 +41,11 @@ public class RepeatOffenderRecordServiceImpl implements RepeatOffenderRecordServ
                 calculator.computeRepeatOffenderRecord(student, cases);
 
         return repeatOffenderRecordRepository.save(record);
+    }
+
+    // ✅ REQUIRED METHOD 2 (THIS WAS MISSING)
+    @Override
+    public List<RepeatOffenderRecord> getAllRepeatOffenders() {
+        return repeatOffenderRecordRepository.findAll();
     }
 }
