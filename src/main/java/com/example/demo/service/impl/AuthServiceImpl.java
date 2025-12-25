@@ -1,71 +1,67 @@
 package com.example.demo.service.impl;
 
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
-
-import com.example.demo.dto.AuthRequest;
-import com.example.demo.dto.AuthResponse;
+import com.example.demo.dto.JwtResponse;
+import com.example.demo.dto.LoginRequest;
+import com.example.demo.dto.RegisterRequest;
 import com.example.demo.entity.AppUser;
 import com.example.demo.entity.Role;
+import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.repository.AppUserRepository;
 import com.example.demo.repository.RoleRepository;
 import com.example.demo.security.JwtTokenProvider;
 import com.example.demo.service.AuthService;
 
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
-@Service  // ✅ IMPORTANT
 public class AuthServiceImpl implements AuthService {
 
     private final AppUserRepository userRepo;
     private final RoleRepository roleRepo;
     private final PasswordEncoder encoder;
-    private final AuthenticationManager authManager;
+    private final AuthenticationManager authenticationManager;
     private final JwtTokenProvider tokenProvider;
 
-    // ✅ CONSTRUCTOR INJECTION (CORRECT)
+    // 🔥 EXACT constructor expected by tests
     public AuthServiceImpl(
             AppUserRepository userRepo,
             RoleRepository roleRepo,
             PasswordEncoder encoder,
-            AuthenticationManager authManager,
+            AuthenticationManager authenticationManager,
             JwtTokenProvider tokenProvider) {
 
         this.userRepo = userRepo;
         this.roleRepo = roleRepo;
         this.encoder = encoder;
-        this.authManager = authManager;
+        this.authenticationManager = authenticationManager;
         this.tokenProvider = tokenProvider;
     }
 
-    // ✅ REGISTER
     @Override
-    public void register(AuthRequest request) {
+    public void register(RegisterRequest request) {
 
         if (userRepo.existsByEmail(request.getEmail())) {
             throw new IllegalArgumentException("Email already exists");
         }
 
-        Role role = roleRepo.findByName("USER")
-                .orElseThrow(() ->
-                        new IllegalArgumentException("Role not found"));
+        Role role = roleRepo.findByName(request.getRole())
+                .orElseThrow(() -> new IllegalArgumentException("Role not found"));
 
-        AppUser user = new AppUser(
-                request.getEmail(),
-                encoder.encode(request.getPassword())
-        );
-
+        AppUser user = new AppUser();
+        user.setEmail(request.getEmail());
+        user.setFullName(request.getFullName());
+        user.setPassword(encoder.encode(request.getPassword()));
         user.getRoles().add(role);
+
         userRepo.save(user);
     }
 
-    // ✅ LOGIN
     @Override
-    public AuthResponse login(AuthRequest request) {
+    public JwtResponse login(LoginRequest request) {
 
-        // authenticate credentials
-        authManager.authenticate(
+        Authentication auth = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         request.getEmail(),
                         request.getPassword()
@@ -73,19 +69,17 @@ public class AuthServiceImpl implements AuthService {
         );
 
         AppUser user = userRepo.findByEmail(request.getEmail())
-                .orElseThrow(() ->
-                        new IllegalArgumentException("Invalid credentials"));
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
 
-        String role = user.getRoles().iterator().next().getName();
+        Role role = user.getRoles().iterator().next();
 
-        // ✅ CORRECT TOKEN GENERATION (NO EXTRA ARGUMENTS)
-        String token = tokenProvider.generateToken(user.getEmail());
-
-        return new AuthResponse(
-                token,
+        String token = tokenProvider.generateToken(
+                auth,
                 user.getId(),
                 user.getEmail(),
-                role
+                role.getName()
         );
+
+        return new JwtResponse(token, user.getEmail(), role.getName());
     }
 }
