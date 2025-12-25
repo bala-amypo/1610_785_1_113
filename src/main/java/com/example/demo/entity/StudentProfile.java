@@ -12,6 +12,9 @@ import jakarta.validation.constraints.NotNull;
 @Table(name = "student_profiles")
 public class StudentProfile {
 
+
+
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

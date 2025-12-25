@@ -8,6 +8,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import com.example.demo.entity.IntegrityCase;
 import com.example.demo.entity.StudentProfile;
 
+
+
 public interface IntegrityCaseRepository extends JpaRepository<IntegrityCase, Long> {
 
     List<IntegrityCase> findByStudentProfile(StudentProfile studentProfile);
@@ -17,4 +19,7 @@ public interface IntegrityCaseRepository extends JpaRepository<IntegrityCase, Lo
     List<IntegrityCase> findRecentCasesByStatus(String status, LocalDate date);
 
     List<IntegrityCase> findByIncidentDateBetween(LocalDate start, LocalDate end);
+
+
+        List<IntegrityCase> findByStudentProfile_StudentIdentifier(String studentIdentifier);
 }
