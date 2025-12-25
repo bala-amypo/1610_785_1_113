@@ -5,7 +5,6 @@ import com.example.demo.dto.LoginRequest;
 import com.example.demo.dto.RegisterRequest;
 import com.example.demo.entity.AppUser;
 import com.example.demo.entity.Role;
-import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.repository.AppUserRepository;
 import com.example.demo.repository.RoleRepository;
 import com.example.demo.security.JwtTokenProvider;
@@ -24,7 +23,7 @@ public class AuthServiceImpl implements AuthService {
     private final AuthenticationManager authenticationManager;
     private final JwtTokenProvider tokenProvider;
 
-    // 🔥 EXACT constructor expected by tests
+    // ✅ EXACT constructor used in tests
     public AuthServiceImpl(
             AppUserRepository userRepo,
             RoleRepository roleRepo,
@@ -51,7 +50,6 @@ public class AuthServiceImpl implements AuthService {
 
         AppUser user = new AppUser();
         user.setEmail(request.getEmail());
-        user.setFullName(request.getFullName());
         user.setPassword(encoder.encode(request.getPassword()));
         user.getRoles().add(role);
 
@@ -80,6 +78,7 @@ public class AuthServiceImpl implements AuthService {
                 role.getName()
         );
 
-        return new JwtResponse(token, user.getEmail(), role.getName());
+        // 🔥 JwtResponse ONLY has single-arg constructor
+        return new JwtResponse(token);
     }
 }
