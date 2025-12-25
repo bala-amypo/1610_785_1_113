@@ -43,3 +43,34 @@ public class PenaltyActionController {
         return service.getAllPenalties();
     }
 }
+
+
+
+
+
+package com.example.demo.service.impl;
+
+import com.example.demo.entity.PenaltyAction;
+import com.example.demo.repository.PenaltyActionRepository;
+import com.example.demo.service.PenaltyActionService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+@Service
+public class PenaltyActionServiceImpl implements PenaltyActionService {
+
+    @Autowired
+    private PenaltyActionRepository repository;
+
+    @Override
+    public List<PenaltyAction> getAllActions() {
+        return repository.findAll();
+    }
+
+    @Override
+    public PenaltyAction saveAction(PenaltyAction action) {
+        return repository.save(action);
+    }
+} 
