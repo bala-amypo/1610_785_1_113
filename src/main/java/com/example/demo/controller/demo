@@ -1,386 +1,231 @@
-package com.example.demo.service;
-
-import java.util.List;
-import com.example.demo.entity.StudentProfile;
-
-public interface StudentProfileService {
-
-    StudentProfile createStudent(StudentProfile studentProfile);
-
-    StudentProfile getStudentById(Long id);
-
-    List<StudentProfile> getAllStudents();
-
-    StudentProfile updateRepeatOffenderStatus(Long studentId);
-
-    StudentProfile getStudentByStudentIdentifier(String studentIdentifier); // ✅ 5th op
-}              00000000000    package com.example.demo.service.impl;
+package com.example.demo.controller;
 
 import java.util.List;
 
-import com.example.demo.entity.IntegrityCase;
-import com.example.demo.entity.RepeatOffenderRecord;
+import jakarta.validation.Valid;
+
+import org.springframework.web.bind.annotation.*;
+
 import com.example.demo.entity.StudentProfile;
-import com.example.demo.exception.ResourceNotFoundException;
-import com.example.demo.repository.IntegrityCaseRepository;
-import com.example.demo.repository.RepeatOffenderRecordRepository;
-import com.example.demo.repository.StudentProfileRepository;
 import com.example.demo.service.StudentProfileService;
-import com.example.demo.util.RepeatOffenderCalculator;
 
-public class StudentProfileServiceImpl implements StudentProfileService {
+@RestController
+@RequestMapping("/students")
+public class StudentProfileController {
 
-    private final StudentProfileRepository studentRepo;
-    private final IntegrityCaseRepository caseRepo;
-    private final RepeatOffenderRecordRepository repeatRepo;
-    private final RepeatOffenderCalculator calculator;
+    private final StudentProfileService service;
 
-    // 🔥 EXACT constructor order (DI tests depend on this)
-    public StudentProfileServiceImpl(
-            StudentProfileRepository studentRepo,
-            IntegrityCaseRepository caseRepo,
-            RepeatOffenderRecordRepository repeatRepo,
-            RepeatOffenderCalculator calculator) {
-
-        this.studentRepo = studentRepo;
-        this.caseRepo = caseRepo;
-        this.repeatRepo = repeatRepo;
-        this.calculator = calculator;
+    public StudentProfileController(StudentProfileService service) {
+        this.service = service;
     }
 
-    // 1️⃣ Create student
-    @Override
-    public StudentProfile createStudent(StudentProfile studentProfile) {
-        studentProfile.setRepeatOffender(false);
-        return studentRepo.save(studentProfile);
+    // 1️⃣ create student
+    @PostMapping
+    public StudentProfile createStudent(@Valid @RequestBody StudentProfile student) {
+        return service.createStudent(student);
     }
 
-    // 2️⃣ Get by ID
-    @Override
-    public StudentProfile getStudentById(Long id) {
-        return studentRepo.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Student not found"));
+    // 2️⃣ get by id
+    @GetMapping("/{id}")
+    public StudentProfile getStudentById(@PathVariable Long id) {
+        return service.getStudentById(id);
     }
 
-    // 3️⃣ Get all students
-    @Override
+    // 3️⃣ get all students
+    @GetMapping
     public List<StudentProfile> getAllStudents() {
-        return studentRepo.findAll();
+        return service.getAllStudents();
     }
 
-    // 4️⃣ Update repeat offender status
-    @Override
-    public StudentProfile updateRepeatOffenderStatus(Long studentId) {
-
-        StudentProfile student = getStudentById(studentId);
-        List<IntegrityCase> cases = caseRepo.findByStudentProfile(student);
-
-        RepeatOffenderRecord record =
-                calculator.computeRepeatOffenderRecord(student, cases);
-
-        repeatRepo.save(record);
-
-        student.setRepeatOffender(record.getTotalCases() >= 2);
-        return studentRepo.save(student);
+    // 4️⃣ update repeat offender status
+    @PutMapping("/{id}/repeat-status")
+    public StudentProfile updateRepeatStatus(@PathVariable Long id) {
+        return service.updateRepeatOffenderStatus(id);
     }
 
-    // 5️⃣ Get by studentIdentifier (EXTERNAL ID)
-    @Override
-    public StudentProfile getStudentByStudentIdentifier(String studentIdentifier) {
-        return studentRepo.findByStudentIdentifier(studentIdentifier)
-                .orElseThrow(() -> new ResourceNotFoundException("Student not found"));
+    // 5️⃣ get by studentIdentifier
+    @GetMapping("/identifier/{studentIdentifier}")
+    public StudentProfile getByStudentIdentifier(
+            @PathVariable String studentIdentifier) {
+        return service.getStudentByStudentIdentifier(studentIdentifier);
     }
-}
- package com.example.demo.service;
-
-import java.util.List;
-import java.util.Optional;
-import com.example.demo.entity.IntegrityCase;
-
-public interface IntegrityCaseService {
-
-    IntegrityCase createCase(IntegrityCase integrityCase);
-
-    IntegrityCase updateCaseStatus(Long caseId, String status);
-
-    List<IntegrityCase> getCasesByStudent(Long studentId);
-
-    Optional<IntegrityCase> getCaseById(Long id);
-
-    List<IntegrityCase> getAllCases();
-}           0000000000        package com.example.demo.service.impl;
+}      000000000       package com.example.demo.controller;
 
 import java.util.List;
 import java.util.Optional;
 
+import jakarta.validation.Valid;
+
+import org.springframework.web.bind.annotation.*;
+
 import com.example.demo.entity.IntegrityCase;
-import com.example.demo.entity.StudentProfile;
-import com.example.demo.exception.ResourceNotFoundException;
-import com.example.demo.repository.IntegrityCaseRepository;
-import com.example.demo.repository.StudentProfileRepository;
 import com.example.demo.service.IntegrityCaseService;
 
-public class IntegrityCaseServiceImpl implements IntegrityCaseService {
+@RestController
+@RequestMapping("/cases")
+public class IntegrityCaseController {
 
-    private final IntegrityCaseRepository caseRepo;
-    private final StudentProfileRepository studentRepo;
+    private final IntegrityCaseService service;
 
-    public IntegrityCaseServiceImpl(
-            IntegrityCaseRepository caseRepo,
-            StudentProfileRepository studentRepo) {
-
-        this.caseRepo = caseRepo;
-        this.studentRepo = studentRepo;
+    public IntegrityCaseController(IntegrityCaseService service) {
+        this.service = service;
     }
 
-    @Override
-    public IntegrityCase createCase(IntegrityCase integrityCase) {
-        if (integrityCase.getStudentProfile() == null) {
-            throw new IllegalArgumentException("StudentProfile required");
-        }
-        return caseRepo.save(integrityCase);
+    // create case
+    @PostMapping
+    public IntegrityCase createCase(@Valid @RequestBody IntegrityCase integrityCase) {
+        return service.createCase(integrityCase);
     }
 
-    @Override
-    public IntegrityCase updateCaseStatus(Long caseId, String status) {
-        IntegrityCase c = caseRepo.findById(caseId)
-                .orElseThrow(() -> new ResourceNotFoundException("Case not found"));
-        c.setStatus(status);
-        return caseRepo.save(c);
+    // update status
+    @PutMapping("/{id}/status")
+    public IntegrityCase updateStatus(
+            @PathVariable Long id,
+            @RequestParam String status) {
+        return service.updateCaseStatus(id, status);
     }
 
-    @Override
-    public List<IntegrityCase> getCasesByStudent(Long studentId) {
-        StudentProfile s = studentRepo.findById(studentId)
-                .orElseThrow(() -> new ResourceNotFoundException("Student not found"));
-        return caseRepo.findByStudentProfile(s);
+    // get by student
+    @GetMapping("/student/{studentId}")
+    public List<IntegrityCase> getCasesByStudent(@PathVariable Long studentId) {
+        return service.getCasesByStudent(studentId);
     }
 
-    @Override
-    public Optional<IntegrityCase> getCaseById(Long id) {
-        return caseRepo.findById(id);
+    // get by id
+    @GetMapping("/{id}")
+    public Optional<IntegrityCase> getById(@PathVariable Long id) {
+        return service.getCaseById(id);
     }
 
-    @Override
-    public List<IntegrityCase> getAllCases() {
-        return caseRepo.findAll();
+    // get all
+    @GetMapping
+    public List<IntegrityCase> getAll() {
+        return service.getAllCases();
     }
 }
- package com.example.demo.service;
-
-import java.util.List;
-import com.example.demo.entity.EvidenceRecord;
-
-public interface EvidenceRecordService {
-
-    EvidenceRecord submitEvidence(EvidenceRecord evidenceRecord);
-
-    EvidenceRecord getEvidenceById(Long id);
-
-    List<EvidenceRecord> getEvidenceByCase(Long caseId);
-
-    List<EvidenceRecord> getAllEvidence();
-}                  000000000       package com.example.demo.service.impl;
+ package com.example.demo.controller;
 
 import java.util.List;
 
+import jakarta.validation.Valid;
+
+import org.springframework.web.bind.annotation.*;
+
 import com.example.demo.entity.EvidenceRecord;
-import com.example.demo.entity.IntegrityCase;
-import com.example.demo.exception.ResourceNotFoundException;
-import com.example.demo.repository.EvidenceRecordRepository;
-import com.example.demo.repository.IntegrityCaseRepository;
 import com.example.demo.service.EvidenceRecordService;
 
-public class EvidenceRecordServiceImpl implements EvidenceRecordService {
+@RestController
+@RequestMapping("/evidence")
+public class EvidenceRecordController {
 
-    private final EvidenceRecordRepository evidenceRepo;
-    private final IntegrityCaseRepository caseRepo;
+    private final EvidenceRecordService service;
 
-    public EvidenceRecordServiceImpl(
-            EvidenceRecordRepository evidenceRepo,
-            IntegrityCaseRepository caseRepo) {
-
-        this.evidenceRepo = evidenceRepo;
-        this.caseRepo = caseRepo;
+    public EvidenceRecordController(EvidenceRecordService service) {
+        this.service = service;
     }
 
-    @Override
-    public EvidenceRecord submitEvidence(EvidenceRecord evidenceRecord) {
-
-        Long caseId = evidenceRecord.getIntegrityCase().getId();
-        IntegrityCase c = caseRepo.findById(caseId)
-                .orElseThrow(() -> new ResourceNotFoundException("Case not found"));
-
-        evidenceRecord.setIntegrityCase(c);
-        return evidenceRepo.save(evidenceRecord);
+    // submit evidence
+    @PostMapping
+    public EvidenceRecord submit(@Valid @RequestBody EvidenceRecord record) {
+        return service.submitEvidence(record);
     }
 
-    @Override
-    public EvidenceRecord getEvidenceById(Long id) {
-        return evidenceRepo.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Evidence not found"));
+    // get by id
+    @GetMapping("/{id}")
+    public EvidenceRecord getById(@PathVariable Long id) {
+        return service.getEvidenceById(id);
     }
 
-    @Override
-    public List<EvidenceRecord> getEvidenceByCase(Long caseId) {
-        IntegrityCase c = caseRepo.findById(caseId)
-                .orElseThrow(() -> new ResourceNotFoundException("Case not found"));
-        return evidenceRepo.findByIntegrityCase(c);
+    // get by case
+    @GetMapping("/case/{caseId}")
+    public List<EvidenceRecord> getByCase(@PathVariable Long caseId) {
+        return service.getEvidenceByCase(caseId);
     }
 
-    @Override
-    public List<EvidenceRecord> getAllEvidence() {
-        return evidenceRepo.findAll();
+    // get all
+    @GetMapping
+    public List<EvidenceRecord> getAll() {
+        return service.getAllEvidence();
     }
-}
- package com.example.demo.service;
-
-import java.util.List;
-import com.example.demo.entity.PenaltyAction;
-
-public interface PenaltyActionService {
-
-    PenaltyAction addPenalty(PenaltyAction penaltyAction);
-
-    PenaltyAction getPenaltyById(Long id);
-
-    List<PenaltyAction> getPenaltiesByCase(Long caseId);
-
-    List<PenaltyAction> getAllPenalties();
-}       000000       package com.example.demo.service.impl;
+}          000000           package com.example.demo.controller;
 
 import java.util.List;
 
-import com.example.demo.entity.IntegrityCase;
+import jakarta.validation.Valid;
+
+import org.springframework.web.bind.annotation.*;
+
 import com.example.demo.entity.PenaltyAction;
-import com.example.demo.exception.ResourceNotFoundException;
-import com.example.demo.repository.IntegrityCaseRepository;
-import com.example.demo.repository.PenaltyActionRepository;
 import com.example.demo.service.PenaltyActionService;
 
-public class PenaltyActionServiceImpl implements PenaltyActionService {
+@RestController
+@RequestMapping("/penalties")
+public class PenaltyActionController {
 
-    private final PenaltyActionRepository penaltyRepo;
-    private final IntegrityCaseRepository caseRepo;
+    private final PenaltyActionService service;
 
-    public PenaltyActionServiceImpl(
-            PenaltyActionRepository penaltyRepo,
-            IntegrityCaseRepository caseRepo) {
-
-        this.penaltyRepo = penaltyRepo;
-        this.caseRepo = caseRepo;
+    public PenaltyActionController(PenaltyActionService service) {
+        this.service = service;
     }
 
-    @Override
-    public PenaltyAction addPenalty(PenaltyAction penaltyAction) {
-
-        Long caseId = penaltyAction.getIntegrityCase().getId();
-
-        IntegrityCase integrityCase = caseRepo.findById(caseId)
-                .orElseThrow(() -> new ResourceNotFoundException("Case not found"));
-
-        integrityCase.setStatus("UNDER_REVIEW");
-        caseRepo.save(integrityCase);
-
-        penaltyAction.setIntegrityCase(integrityCase);
-        return penaltyRepo.save(penaltyAction);
+    // add penalty
+    @PostMapping
+    public PenaltyAction add(@Valid @RequestBody PenaltyAction action) {
+        return service.addPenalty(action);
     }
 
-    @Override
-    public PenaltyAction getPenaltyById(Long id) {
-        return penaltyRepo.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Penalty not found"));
+    // get by id
+    @GetMapping("/{id}")
+    public PenaltyAction getById(@PathVariable Long id) {
+        return service.getPenaltyById(id);
     }
 
-    @Override
-    public List<PenaltyAction> getPenaltiesByCase(Long caseId) {
-        IntegrityCase c = caseRepo.findById(caseId)
-                .orElseThrow(() -> new ResourceNotFoundException("Case not found"));
-        return penaltyRepo.findByIntegrityCase(c);
+    // get by case
+    @GetMapping("/case/{caseId}")
+    public List<PenaltyAction> getByCase(@PathVariable Long caseId) {
+        return service.getPenaltiesByCase(caseId);
     }
 
-    @Override
-    public List<PenaltyAction> getAllPenalties() {
-        return penaltyRepo.findAll();
+    // get all
+    @GetMapping
+    public List<PenaltyAction> getAll() {
+        return service.getAllPenalties();
     }
 }
- package com.example.demo.service;
-
-import java.util.List;
-import com.example.demo.entity.RepeatOffenderRecord;
-
-public interface RepeatOffenderRecordService {
-
-    RepeatOffenderRecord recalculateRepeatOffender(Long studentId);
-
-    RepeatOffenderRecord getByStudentId(Long studentId);
-
-    List<RepeatOffenderRecord> getAllRepeatOffenders();
-}                        00000000000         package com.example.demo.service.impl;
+ package com.example.demo.controller;
 
 import java.util.List;
 
-import com.example.demo.entity.IntegrityCase;
+import org.springframework.web.bind.annotation.*;
+
 import com.example.demo.entity.RepeatOffenderRecord;
-import com.example.demo.entity.StudentProfile;
-import com.example.demo.exception.ResourceNotFoundException;
-import com.example.demo.repository.IntegrityCaseRepository;
-import com.example.demo.repository.RepeatOffenderRecordRepository;
-import com.example.demo.repository.StudentProfileRepository;
 import com.example.demo.service.RepeatOffenderRecordService;
-import com.example.demo.util.RepeatOffenderCalculator;
 
-public class RepeatOffenderRecordServiceImpl implements RepeatOffenderRecordService {
+@RestController
+@RequestMapping("/repeat-offenders")
+public class RepeatOffenderRecordController {
 
-    private final StudentProfileRepository studentRepo;
-    private final IntegrityCaseRepository caseRepo;
-    private final RepeatOffenderRecordRepository repeatRepo;
-    private final RepeatOffenderCalculator calculator;
+    private final RepeatOffenderRecordService service;
 
-    public RepeatOffenderRecordServiceImpl(
-            StudentProfileRepository studentRepo,
-            IntegrityCaseRepository caseRepo,
-            RepeatOffenderRecordRepository repeatRepo,
-            RepeatOffenderCalculator calculator) {
-
-        this.studentRepo = studentRepo;
-        this.caseRepo = caseRepo;
-        this.repeatRepo = repeatRepo;
-        this.calculator = calculator;
+    public RepeatOffenderRecordController(RepeatOffenderRecordService service) {
+        this.service = service;
     }
 
-    @Override
-    public RepeatOffenderRecord recalculateRepeatOffender(Long studentId) {
-
-        StudentProfile student = studentRepo.findById(studentId)
-                .orElseThrow(() -> new ResourceNotFoundException("Student not found"));
-
-        List<IntegrityCase> cases = caseRepo.findByStudentProfile(student);
-
-        RepeatOffenderRecord record =
-                calculator.computeRepeatOffenderRecord(student, cases);
-
-        repeatRepo.save(record);
-
-        student.setRepeatOffender(record.getTotalCases() >= 2);
-        studentRepo.save(student);
-
-        return record;
+    // recalculate
+    @PutMapping("/{studentId}")
+    public RepeatOffenderRecord recalculate(@PathVariable Long studentId) {
+        return service.recalculateRepeatOffender(studentId);
     }
 
-    @Override
-    public RepeatOffenderRecord getByStudentId(Long studentId) {
-
-        StudentProfile student = studentRepo.findById(studentId)
-                .orElseThrow(() -> new ResourceNotFoundException("Student not found"));
-
-        return repeatRepo.findByStudentProfile(student)
-                .orElseThrow(() -> new ResourceNotFoundException("Repeat record not found"));
+    // get by student
+    @GetMapping("/student/{studentId}")
+    public RepeatOffenderRecord getByStudent(@PathVariable Long studentId) {
+        return service.getByStudentId(studentId);
     }
 
-    @Override
-    public List<RepeatOffenderRecord> getAllRepeatOffenders() {
-        return repeatRepo.findAll();
+    // get all
+    @GetMapping
+    public List<RepeatOffenderRecord> getAll() {
+        return service.getAllRepeatOffenders();
     }
 }
- 

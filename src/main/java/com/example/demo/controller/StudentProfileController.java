@@ -1,64 +1,52 @@
-
 package com.example.demo.controller;
 
 import java.util.List;
+
 import jakarta.validation.Valid;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import com.example.demo.entity.StudentProfile;
 import com.example.demo.service.StudentProfileService;
 
 @RestController
-@RequestMapping("/api/students")
+@RequestMapping("/students")
 public class StudentProfileController {
 
-    @Autowired
-    private StudentProfileService service;
+    private final StudentProfileService service;
 
-    @PostMapping("p1")
+    public StudentProfileController(StudentProfileService service) {
+        this.service = service;
+    }
+
+    // 1️⃣ create student
+    @PostMapping
     public StudentProfile createStudent(@Valid @RequestBody StudentProfile student) {
         return service.createStudent(student);
     }
 
+    // 2️⃣ get by id
     @GetMapping("/{id}")
     public StudentProfile getStudentById(@PathVariable Long id) {
         return service.getStudentById(id);
     }
 
-    @GetMapping("g1")
+    // 3️⃣ get all students
+    @GetMapping
     public List<StudentProfile> getAllStudents() {
         return service.getAllStudents();
     }
 
-    @PutMapping("put1/{studentId}/repeat-status")
-    public StudentProfile updateRepeatStatus(
-            @PathVariable Long studentId,
-            @RequestParam boolean status) {
-        return service.updateRepeatStatus(studentId, status);
+    // 4️⃣ update repeat offender status
+    @PutMapping("/{id}/repeat-status")
+    public StudentProfile updateRepeatStatus(@PathVariable Long id) {
+        return service.updateRepeatOffenderStatus(id);
     }
 
-    @GetMapping("ge1/lookup/{identifier}")
-    public StudentProfile findByIdentifier(@PathVariable String identifier) {
-        return service.findByStudentIdentifier(identifier);
-
+    // 5️⃣ get by studentIdentifier
+    @GetMapping("/identifier/{studentIdentifier}")
+    public StudentProfile getByStudentIdentifier(
+            @PathVariable String studentIdentifier) {
+        return service.getStudentByStudentIdentifier(studentIdentifier);
     }
-
-
-
-         @PostMapping("/studentProfile")
-    public StudentProfile saveProfile(
-            @Valid @RequestBody StudentProfile profile) {
-        return service.postData(profile);
-    }
-
-    @GetMapping("/studentProfile/{id}")
-    public StudentProfile getProfileById(@PathVariable Long id) {
-        return service.getData(id); 
-    }
-    
 } 
-
-
-

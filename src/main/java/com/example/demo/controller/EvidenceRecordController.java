@@ -1,39 +1,45 @@
-package com.example.demo.controller;
+ package com.example.demo.controller;
 
 import java.util.List;
+
 import jakarta.validation.Valid;
 
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import com.example.demo.entity.EvidenceRecord;
 import com.example.demo.service.EvidenceRecordService;
 
 @RestController
-@RequestMapping("/api/evidence")
+@RequestMapping("/evidence")
 public class EvidenceRecordController {
 
-    @Autowired
-    private EvidenceRecordService service;
+    private final EvidenceRecordService service;
 
-    @PostMapping("p5")
-    public EvidenceRecord submitEvidence(@Valid @RequestBody EvidenceRecord evidence) {
-        return service.submitEvidence(evidence);
+    public EvidenceRecordController(EvidenceRecordService service) {
+        this.service = service;
     }
 
-    @GetMapping("g5/case/{caseId}")
-    public List<EvidenceRecord> getEvidenceByCase(@PathVariable Long caseId) {
-        return service.getEvidenceByCase(caseId);
+    // submit evidence
+    @PostMapping
+    public EvidenceRecord submit(@Valid @RequestBody EvidenceRecord record) {
+        return service.submitEvidence(record);
     }
 
-    @GetMapping("ge5/{id}")
-    public EvidenceRecord getEvidenceById(@PathVariable Long id) {
+    // get by id
+    @GetMapping("/{id}")
+    public EvidenceRecord getById(@PathVariable Long id) {
         return service.getEvidenceById(id);
     }
 
-    @GetMapping("get5")
-    public List<EvidenceRecord> getAllEvidence() {
+    // get by case
+    @GetMapping("/case/{caseId}")
+    public List<EvidenceRecord> getByCase(@PathVariable Long caseId) {
+        return service.getEvidenceByCase(caseId);
+    }
+
+    // get all
+    @GetMapping
+    public List<EvidenceRecord> getAll() {
         return service.getAllEvidence();
     }
-}
+} 
