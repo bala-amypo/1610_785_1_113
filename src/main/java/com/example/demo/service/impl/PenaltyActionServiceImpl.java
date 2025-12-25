@@ -1,43 +1,57 @@
-package com.example.demo.service.Impl;
+ package com.example.demo.service.impl;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import com.example.demo.entity.PenaltyAction;
 import com.example.demo.entity.IntegrityCase;
-import com.example.demo.repository.PenaltyActionRepository;
+import com.example.demo.entity.PenaltyAction;
+import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.repository.IntegrityCaseRepository;
+import com.example.demo.repository.PenaltyActionRepository;
 import com.example.demo.service.PenaltyActionService;
 
-@Service
 public class PenaltyActionServiceImpl implements PenaltyActionService {
 
-    @Autowired
-    private PenaltyActionRepository penaltyRepo;
+    private final PenaltyActionRepository penaltyRepo;
+    private final IntegrityCaseRepository caseRepo;
 
-    @Autowired
-    private IntegrityCaseRepository caseRepo;
+    public PenaltyActionServiceImpl(
+            PenaltyActionRepository penaltyRepo,
+            IntegrityCaseRepository caseRepo) {
 
-    @Override
-    public PenaltyAction addPenalty(PenaltyAction penalty) {
-        return penaltyRepo.save(penalty);
+        this.penaltyRepo = penaltyRepo;
+        this.caseRepo = caseRepo;
     }
 
     @Override
-    public List<PenaltyAction> getPenaltiesByCase(Long caseId) {
-        IntegrityCase ic = caseRepo.findById(caseId).orElse(null);
-        return ic != null ? penaltyRepo.findByIntegrityCase(ic) : null;
+    public PenaltyAction addPenalty(PenaltyAction penaltyAction) {
+
+        Long caseId = penaltyAction.getIntegrityCase().getId();
+
+        IntegrityCase integrityCase = caseRepo.findById(caseId)
+                .orElseThrow(() -> new ResourceNotFoundException("Case not found"));
+
+        integrityCase.setStatus("UNDER_REVIEW");
+        caseRepo.save(integrityCase);
+
+        penaltyAction.setIntegrityCase(integrityCase);
+        return penaltyRepo.save(penaltyAction);
     }
 
     @Override
     public PenaltyAction getPenaltyById(Long id) {
-        return penaltyRepo.findById(id).orElse(null);
+        return penaltyRepo.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Penalty not found"));
+    }
+
+    @Override
+    public List<PenaltyAction> getPenaltiesByCase(Long caseId) {
+        IntegrityCase c = caseRepo.findById(caseId)
+                .orElseThrow(() -> new ResourceNotFoundException("Case not found"));
+        return penaltyRepo.findByIntegrityCase(c);
     }
 
     @Override
     public List<PenaltyAction> getAllPenalties() {
         return penaltyRepo.findAll();
     }
-} 
+}

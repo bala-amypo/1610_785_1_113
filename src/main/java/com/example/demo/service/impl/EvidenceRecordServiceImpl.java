@@ -1,43 +1,53 @@
-package com.example.demo.service.Impl;
+package com.example.demo.service.impl;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.example.demo.entity.EvidenceRecord;
 import com.example.demo.entity.IntegrityCase;
+import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.repository.EvidenceRecordRepository;
 import com.example.demo.repository.IntegrityCaseRepository;
 import com.example.demo.service.EvidenceRecordService;
 
-@Service
 public class EvidenceRecordServiceImpl implements EvidenceRecordService {
 
-    @Autowired
-    private EvidenceRecordRepository evidenceRepo;
+    private final EvidenceRecordRepository evidenceRepo;
+    private final IntegrityCaseRepository caseRepo;
 
-    @Autowired
-    private IntegrityCaseRepository caseRepo;
+    public EvidenceRecordServiceImpl(
+            EvidenceRecordRepository evidenceRepo,
+            IntegrityCaseRepository caseRepo) {
 
-    @Override
-    public EvidenceRecord submitEvidence(EvidenceRecord evidence) {
-        return evidenceRepo.save(evidence);
+        this.evidenceRepo = evidenceRepo;
+        this.caseRepo = caseRepo;
     }
 
     @Override
-    public List<EvidenceRecord> getEvidenceByCase(Long caseId) {
-        IntegrityCase ic = caseRepo.findById(caseId).orElse(null);
-        return ic != null ? evidenceRepo.findByIntegrityCase(ic) : null;
+    public EvidenceRecord submitEvidence(EvidenceRecord evidenceRecord) {
+
+        Long caseId = evidenceRecord.getIntegrityCase().getId();
+        IntegrityCase c = caseRepo.findById(caseId)
+                .orElseThrow(() -> new ResourceNotFoundException("Case not found"));
+
+        evidenceRecord.setIntegrityCase(c);
+        return evidenceRepo.save(evidenceRecord);
     }
 
     @Override
     public EvidenceRecord getEvidenceById(Long id) {
-        return evidenceRepo.findById(id).orElse(null);
+        return evidenceRepo.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Evidence not found"));
+    }
+
+    @Override
+    public List<EvidenceRecord> getEvidenceByCase(Long caseId) {
+        IntegrityCase c = caseRepo.findById(caseId)
+                .orElseThrow(() -> new ResourceNotFoundException("Case not found"));
+        return evidenceRepo.findByIntegrityCase(c);
     }
 
     @Override
     public List<EvidenceRecord> getAllEvidence() {
         return evidenceRepo.findAll();
     }
-}  
+}
