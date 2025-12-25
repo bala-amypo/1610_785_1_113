@@ -8,18 +8,18 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import com.example.demo.entity.IntegrityCase;
 import com.example.demo.entity.StudentProfile;
 
-
-
 public interface IntegrityCaseRepository extends JpaRepository<IntegrityCase, Long> {
 
+    // Find all cases for a given StudentProfile
     List<IntegrityCase> findByStudentProfile(StudentProfile studentProfile);
 
-    List<IntegrityCase> findByStudentIdentifier(String id);
+    // ✅ Corrected: find by studentId through the relation
+    List<IntegrityCase> findByStudentProfile_StudentId(String studentId);
 
+    // Example: find recent cases by status and after a certain date
     List<IntegrityCase> findRecentCasesByStatus(String status, LocalDate date);
 
+    // Find cases between dates
     List<IntegrityCase> findByIncidentDateBetween(LocalDate start, LocalDate end);
 
-
-        List<IntegrityCase> findByStudentProfile_StudentIdentifier(String studentIdentifier);
 }
