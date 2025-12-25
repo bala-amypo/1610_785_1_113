@@ -1,18 +1,23 @@
-package com.example.demo.service.impl;
+@Entity
+public class IntegrityCase {
 
-import org.springframework.stereotype.Service;
-import com.example.demo.service.EvidenceRecordService;
+    @Id
+    @GeneratedValue
+    private Long id;
 
-@Service   // 🔴 THIS IS THE FIX
-public class EvidenceRecordServiceImpl implements EvidenceRecordService {
+    @ManyToOne
+    private StudentProfile studentProfile;
 
-}      000000000  package com.example.demo.service.impl;
+}                  000000000     @Entity
+public class StudentProfile {
 
-import org.springframework.stereotype.Service;
-import com.example.demo.service.AuthService;
+    @Id
+    @GeneratedValue
+    private Long id;
 
-@Service   // 🔴 MUST BE PRESENT
-public class AuthServiceImpl implements AuthService {
-    ...
+    private String studentIdentifier;
 }
- 
+ public interface IntegrityCaseRepository extends JpaRepository<IntegrityCase, Long> {
+
+    List<IntegrityCase> findByStudentProfile_StudentIdentifier(String studentIdentifier);
+}
