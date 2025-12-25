@@ -9,6 +9,23 @@ import com.example.demo.repository.EvidenceRecordRepository;
 import com.example.demo.repository.IntegrityCaseRepository;
 import com.example.demo.service.EvidenceRecordService;
 
+
+
+package com.example.demo.service.impl;
+
+import org.springframework.stereotype.Service;
+import com.example.demo.service.EvidenceRecordService;
+
+@Service   // 🔴 THIS IS THE FIX
+public class EvidenceRecordServiceImpl implements EvidenceRecordService {
+
+}  
+
+
+
+
+
+
 public class EvidenceRecordServiceImpl implements EvidenceRecordService {
 
     private final EvidenceRecordRepository evidenceRepo;
