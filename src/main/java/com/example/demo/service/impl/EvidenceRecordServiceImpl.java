@@ -2,6 +2,7 @@ package com.example.demo.service.impl;
 
 import java.util.List;
 
+import org.springframework.stereotype.Service;
 import com.example.demo.entity.EvidenceRecord;
 import com.example.demo.entity.IntegrityCase;
 import com.example.demo.exception.ResourceNotFoundException;
@@ -11,21 +12,7 @@ import com.example.demo.service.EvidenceRecordService;
 
 
 
-package com.example.demo.service.impl;
-
-import org.springframework.stereotype.Service;
-import com.example.demo.service.EvidenceRecordService;
-
-@Service   // 🔴 THIS IS THE FIX
-public class EvidenceRecordServiceImpl implements EvidenceRecordService {
-
-}  
-
-
-
-
-
-
+@Service 
 public class EvidenceRecordServiceImpl implements EvidenceRecordService {
 
     private final EvidenceRecordRepository evidenceRepo;

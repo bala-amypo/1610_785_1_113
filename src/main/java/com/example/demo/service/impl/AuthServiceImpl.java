@@ -14,6 +14,7 @@ import com.example.demo.repository.RoleRepository;
 import com.example.demo.security.JwtTokenProvider;
 import com.example.demo.service.AuthService;
 
+
 @Service  // ✅ IMPORTANT
 public class AuthServiceImpl implements AuthService {
 
