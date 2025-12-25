@@ -10,3 +10,42 @@
         <artifactId>spring-boot-starter-validation</artifactId>
     </dependency>
 </dependencies>
+
+
+
+
+
+
+
+
+package com.example.demo.security;
+
+import java.util.Date;
+
+import org.springframework.stereotype.Component;
+
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
+
+@Component
+public class JwtTokenProvider {
+
+    private final String jwtSecret = "mySecretKey";
+    private final long jwtExpirationMs = 86400000; // 1 day
+
+    // ✅ THIS METHOD MUST EXIST
+    public String generateToken(String email) {
+
+        return Jwts.builder()
+                .setSubject(email)
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + jwtExpirationMs))
+                .signWith(SignatureAlgorithm.HS256, jwtSecret)
+                .compact();
+    }
+}                    00000000000 <dependency>
+    <groupId>io.jsonwebtoken</groupId>
+    <artifactId>jjwt</artifactId>
+    <version>0.9.1</version>
+</dependency>
+ 

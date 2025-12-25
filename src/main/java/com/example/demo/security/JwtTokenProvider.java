@@ -10,6 +10,22 @@ import io.jsonwebtoken.SignatureAlgorithm;
 @Component
 public class JwtTokenProvider {
 
+
+
+     private final String jwtSecret = "mySecretKey";
+    private final long jwtExpirationMs = 86400000; // 1 day
+
+    // ✅ THIS METHOD MUST EXIST
+    public String generateToken(String email) {
+
+        return Jwts.builder()
+                .setSubject(email)
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + jwtExpirationMs))
+                .signWith(SignatureAlgorithm.HS256, jwtSecret)
+                .compact();
+    }
+
     private final String secretKey = "secret";
     private final long validity = 86400000; // 1 day
 
@@ -34,3 +50,39 @@ public class JwtTokenProvider {
                 .getSubject();
     }
 }
+
+
+
+
+
+
+
+
+
+
+package com.example.demo.security;
+
+import java.util.Date;
+
+import org.springframework.stereotype.Component;
+
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
+
+@Component
+public class JwtTokenProvider {
+
+    private final String jwtSecret = "mySecretKey";
+    private final long jwtExpirationMs = 86400000; // 1 day
+
+    // ✅ THIS METHOD MUST EXIST
+    public String generateToken(String email) {
+
+        return Jwts.builder()
+                .setSubject(email)
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + jwtExpirationMs))
+                .signWith(SignatureAlgorithm.HS256, jwtSecret)
+                .compact();
+    }
+} 
