@@ -1,68 +1,77 @@
-package com.example.demo.service.Impl;
+package com.example.demo.service.impl;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
+import com.example.demo.entity.IntegrityCase;
+import com.example.demo.entity.RepeatOffenderRecord;
 import com.example.demo.entity.StudentProfile;
+import com.example.demo.exception.ResourceNotFoundException;
+import com.example.demo.repository.IntegrityCaseRepository;
+import com.example.demo.repository.RepeatOffenderRecordRepository;
 import com.example.demo.repository.StudentProfileRepository;
 import com.example.demo.service.StudentProfileService;
-import com.example.demo.exception.StudentProfileNotFoundException;
-    
+import com.example.demo.util.RepeatOffenderCalculator;
 
-@Service
 public class StudentProfileServiceImpl implements StudentProfileService {
 
-    @Autowired
-    private StudentProfileRepository repo;
+    private final StudentProfileRepository studentRepo;
+    private final IntegrityCaseRepository caseRepo;
+    private final RepeatOffenderRecordRepository repeatRepo;
+    private final RepeatOffenderCalculator calculator;
 
-    @Override
-    public StudentProfile createStudent(StudentProfile student) {
-        return repo.save(student);
+    // 🔥 EXACT constructor order (DI tests depend on this)
+    public StudentProfileServiceImpl(
+            StudentProfileRepository studentRepo,
+            IntegrityCaseRepository caseRepo,
+            RepeatOffenderRecordRepository repeatRepo,
+            RepeatOffenderCalculator calculator) {
+
+        this.studentRepo = studentRepo;
+        this.caseRepo = caseRepo;
+        this.repeatRepo = repeatRepo;
+        this.calculator = calculator;
     }
 
+    // 1️⃣ Create student
+    @Override
+    public StudentProfile createStudent(StudentProfile studentProfile) {
+        studentProfile.setRepeatOffender(false);
+        return studentRepo.save(studentProfile);
+    }
+
+    // 2️⃣ Get by ID
     @Override
     public StudentProfile getStudentById(Long id) {
-        return repo.findById(id).orElse(null);
+        return studentRepo.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Student not found"));
     }
 
+    // 3️⃣ Get all students
     @Override
     public List<StudentProfile> getAllStudents() {
-        return repo.findAll();
+        return studentRepo.findAll();
     }
 
+    // 4️⃣ Update repeat offender status
     @Override
-    public StudentProfile updateRepeatStatus(Long studentId, boolean status) {
-        StudentProfile student = repo.findById(studentId).orElse(null);
-        if (student != null) {
-            student.setRepeatOffender(status);
-            return repo.save(student);
-        }
-        return null;
+    public StudentProfile updateRepeatOffenderStatus(Long studentId) {
+
+        StudentProfile student = getStudentById(studentId);
+        List<IntegrityCase> cases = caseRepo.findByStudentProfile(student);
+
+        RepeatOffenderRecord record =
+                calculator.computeRepeatOffenderRecord(student, cases);
+
+        repeatRepo.save(record);
+
+        student.setRepeatOffender(record.getTotalCases() >= 2);
+        return studentRepo.save(student);
     }
 
+    // 5️⃣ Get by studentIdentifier (EXTERNAL ID)
     @Override
-    public StudentProfile findByStudentIdentifier(String identifier) {
-        return repo.findByStudentId(identifier).orElse(null);
-    }
-
-    
-
-
-
-
-
-       @Override
-    public StudentProfile postData(StudentProfile profile) {
-        return repo.save(profile);
-    }
-
-    @Override
-    public StudentProfile getData(Long id) {
-        return repo.findById(id)
-                .orElseThrow(() ->
-                        new StudentProfileNotFoundException("StudentProfile ID not found : " + id));
+    public StudentProfile getStudentByStudentIdentifier(String studentIdentifier) {
+        return studentRepo.findByStudentIdentifier(studentIdentifier)
+                .orElseThrow(() -> new ResourceNotFoundException("Student not found"));
     }
 }
-

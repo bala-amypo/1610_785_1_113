@@ -12,7 +12,9 @@ public interface StudentProfileService {
     List<StudentProfile> getAllStudents();
 
     StudentProfile updateRepeatOffenderStatus(Long studentId);
-}    0000000000 package com.example.demo.service.impl;
+
+    StudentProfile getStudentByStudentIdentifier(String studentIdentifier); // ✅ 5th op
+}              00000000000    package com.example.demo.service.impl;
 
 import java.util.List;
 
@@ -33,7 +35,7 @@ public class StudentProfileServiceImpl implements StudentProfileService {
     private final RepeatOffenderRecordRepository repeatRepo;
     private final RepeatOffenderCalculator calculator;
 
-    // 🔥 EXACT constructor order (DO NOT CHANGE)
+    // 🔥 EXACT constructor order (DI tests depend on this)
     public StudentProfileServiceImpl(
             StudentProfileRepository studentRepo,
             IntegrityCaseRepository caseRepo,
@@ -46,43 +48,53 @@ public class StudentProfileServiceImpl implements StudentProfileService {
         this.calculator = calculator;
     }
 
+    // 1️⃣ Create student
     @Override
     public StudentProfile createStudent(StudentProfile studentProfile) {
         studentProfile.setRepeatOffender(false);
         return studentRepo.save(studentProfile);
     }
 
+    // 2️⃣ Get by ID
     @Override
     public StudentProfile getStudentById(Long id) {
         return studentRepo.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Student not found"));
     }
 
+    // 3️⃣ Get all students
     @Override
     public List<StudentProfile> getAllStudents() {
         return studentRepo.findAll();
     }
 
+    // 4️⃣ Update repeat offender status
     @Override
     public StudentProfile updateRepeatOffenderStatus(Long studentId) {
 
-        StudentProfile profile = getStudentById(studentId);
-        List<IntegrityCase> cases = caseRepo.findByStudentProfile(profile);
+        StudentProfile student = getStudentById(studentId);
+        List<IntegrityCase> cases = caseRepo.findByStudentProfile(student);
 
         RepeatOffenderRecord record =
-                calculator.computeRepeatOffenderRecord(profile, cases);
+                calculator.computeRepeatOffenderRecord(student, cases);
 
         repeatRepo.save(record);
 
-        profile.setRepeatOffender(record.getTotalCases() >= 2);
-        return studentRepo.save(profile);
+        student.setRepeatOffender(record.getTotalCases() >= 2);
+        return studentRepo.save(student);
+    }
+
+    // 5️⃣ Get by studentIdentifier (EXTERNAL ID)
+    @Override
+    public StudentProfile getStudentByStudentIdentifier(String studentIdentifier) {
+        return studentRepo.findByStudentIdentifier(studentIdentifier)
+                .orElseThrow(() -> new ResourceNotFoundException("Student not found"));
     }
 }
  package com.example.demo.service;
 
 import java.util.List;
 import java.util.Optional;
-
 import com.example.demo.entity.IntegrityCase;
 
 public interface IntegrityCaseService {
@@ -96,7 +108,7 @@ public interface IntegrityCaseService {
     Optional<IntegrityCase> getCaseById(Long id);
 
     List<IntegrityCase> getAllCases();
-}   000000   package com.example.demo.service.impl;
+}           0000000000        package com.example.demo.service.impl;
 
 import java.util.List;
 import java.util.Optional;
@@ -113,10 +125,10 @@ public class IntegrityCaseServiceImpl implements IntegrityCaseService {
     private final IntegrityCaseRepository caseRepo;
     private final StudentProfileRepository studentRepo;
 
-    // 🔥 EXACT order
     public IntegrityCaseServiceImpl(
             IntegrityCaseRepository caseRepo,
             StudentProfileRepository studentRepo) {
+
         this.caseRepo = caseRepo;
         this.studentRepo = studentRepo;
     }
@@ -163,12 +175,12 @@ public interface EvidenceRecordService {
 
     EvidenceRecord submitEvidence(EvidenceRecord evidenceRecord);
 
-    List<EvidenceRecord> getEvidenceByCase(Long caseId);
-
     EvidenceRecord getEvidenceById(Long id);
 
+    List<EvidenceRecord> getEvidenceByCase(Long caseId);
+
     List<EvidenceRecord> getAllEvidence();
-}               0000000      package com.example.demo.service.impl;
+}                  000000000       package com.example.demo.service.impl;
 
 import java.util.List;
 
@@ -184,21 +196,29 @@ public class EvidenceRecordServiceImpl implements EvidenceRecordService {
     private final EvidenceRecordRepository evidenceRepo;
     private final IntegrityCaseRepository caseRepo;
 
-    // 🔥 EXACT order
     public EvidenceRecordServiceImpl(
             EvidenceRecordRepository evidenceRepo,
             IntegrityCaseRepository caseRepo) {
+
         this.evidenceRepo = evidenceRepo;
         this.caseRepo = caseRepo;
     }
 
     @Override
     public EvidenceRecord submitEvidence(EvidenceRecord evidenceRecord) {
+
         Long caseId = evidenceRecord.getIntegrityCase().getId();
         IntegrityCase c = caseRepo.findById(caseId)
                 .orElseThrow(() -> new ResourceNotFoundException("Case not found"));
+
         evidenceRecord.setIntegrityCase(c);
         return evidenceRepo.save(evidenceRecord);
+    }
+
+    @Override
+    public EvidenceRecord getEvidenceById(Long id) {
+        return evidenceRepo.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Evidence not found"));
     }
 
     @Override
@@ -209,12 +229,6 @@ public class EvidenceRecordServiceImpl implements EvidenceRecordService {
     }
 
     @Override
-    public EvidenceRecord getEvidenceById(Long id) {
-        return evidenceRepo.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Evidence not found"));
-    }
-
-    @Override
     public List<EvidenceRecord> getAllEvidence() {
         return evidenceRepo.findAll();
     }
@@ -222,7 +236,6 @@ public class EvidenceRecordServiceImpl implements EvidenceRecordService {
  package com.example.demo.service;
 
 import java.util.List;
-
 import com.example.demo.entity.PenaltyAction;
 
 public interface PenaltyActionService {
@@ -234,7 +247,7 @@ public interface PenaltyActionService {
     List<PenaltyAction> getPenaltiesByCase(Long caseId);
 
     List<PenaltyAction> getAllPenalties();
-}                   00000000           package com.example.demo.service.impl;
+}       000000       package com.example.demo.service.impl;
 
 import java.util.List;
 
@@ -250,7 +263,6 @@ public class PenaltyActionServiceImpl implements PenaltyActionService {
     private final PenaltyActionRepository penaltyRepo;
     private final IntegrityCaseRepository caseRepo;
 
-    // 🔥 EXACT constructor order (DI test safe)
     public PenaltyActionServiceImpl(
             PenaltyActionRepository penaltyRepo,
             IntegrityCaseRepository caseRepo) {
@@ -267,7 +279,6 @@ public class PenaltyActionServiceImpl implements PenaltyActionService {
         IntegrityCase integrityCase = caseRepo.findById(caseId)
                 .orElseThrow(() -> new ResourceNotFoundException("Case not found"));
 
-        // Business rule: OPEN → UNDER_REVIEW
         integrityCase.setStatus("UNDER_REVIEW");
         caseRepo.save(integrityCase);
 
@@ -283,9 +294,9 @@ public class PenaltyActionServiceImpl implements PenaltyActionService {
 
     @Override
     public List<PenaltyAction> getPenaltiesByCase(Long caseId) {
-        IntegrityCase integrityCase = caseRepo.findById(caseId)
+        IntegrityCase c = caseRepo.findById(caseId)
                 .orElseThrow(() -> new ResourceNotFoundException("Case not found"));
-        return penaltyRepo.findByIntegrityCase(integrityCase);
+        return penaltyRepo.findByIntegrityCase(c);
     }
 
     @Override
@@ -295,6 +306,7 @@ public class PenaltyActionServiceImpl implements PenaltyActionService {
 }
  package com.example.demo.service;
 
+import java.util.List;
 import com.example.demo.entity.RepeatOffenderRecord;
 
 public interface RepeatOffenderRecordService {
@@ -302,7 +314,9 @@ public interface RepeatOffenderRecordService {
     RepeatOffenderRecord recalculateRepeatOffender(Long studentId);
 
     RepeatOffenderRecord getByStudentId(Long studentId);
-}                    0000000000         package com.example.demo.service.impl;
+
+    List<RepeatOffenderRecord> getAllRepeatOffenders();
+}                        00000000000         package com.example.demo.service.impl;
 
 import java.util.List;
 
@@ -323,7 +337,6 @@ public class RepeatOffenderRecordServiceImpl implements RepeatOffenderRecordServ
     private final RepeatOffenderRecordRepository repeatRepo;
     private final RepeatOffenderCalculator calculator;
 
-    // 🔥 EXACT constructor order (DI test safe)
     public RepeatOffenderRecordServiceImpl(
             StudentProfileRepository studentRepo,
             IntegrityCaseRepository caseRepo,
@@ -349,7 +362,6 @@ public class RepeatOffenderRecordServiceImpl implements RepeatOffenderRecordServ
 
         repeatRepo.save(record);
 
-        // Keep StudentProfile in sync
         student.setRepeatOffender(record.getTotalCases() >= 2);
         studentRepo.save(student);
 
@@ -364,6 +376,11 @@ public class RepeatOffenderRecordServiceImpl implements RepeatOffenderRecordServ
 
         return repeatRepo.findByStudentProfile(student)
                 .orElseThrow(() -> new ResourceNotFoundException("Repeat record not found"));
+    }
+
+    @Override
+    public List<RepeatOffenderRecord> getAllRepeatOffenders() {
+        return repeatRepo.findAll();
     }
 }
  

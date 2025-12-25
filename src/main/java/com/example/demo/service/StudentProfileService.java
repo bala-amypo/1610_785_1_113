@@ -5,32 +5,6 @@ import com.example.demo.entity.StudentProfile;
 
 public interface StudentProfileService {
 
-    StudentProfile createStudent(StudentProfile student);
-
-    StudentProfile getStudentById(Long id);
-
-    List<StudentProfile> getAllStudents();
-
-    StudentProfile updateRepeatStatus(Long studentId, boolean status);
-
-    StudentProfile findByStudentIdentifier(String identifier);
-
-
-
-
-    StudentProfile postData(StudentProfile profile);
-
-    StudentProfile getData(Long id);   
-}
-
-
-package com.example.demo.service;
-
-import java.util.List;
-import com.example.demo.entity.StudentProfile;
-
-public interface StudentProfileService {
-
     StudentProfile createStudent(StudentProfile studentProfile);
 
     StudentProfile getStudentById(Long id);
@@ -38,4 +12,6 @@ public interface StudentProfileService {
     List<StudentProfile> getAllStudents();
 
     StudentProfile updateRepeatOffenderStatus(Long studentId);
-} 
+
+    StudentProfile getStudentByStudentIdentifier(String studentIdentifier); 
+}  
