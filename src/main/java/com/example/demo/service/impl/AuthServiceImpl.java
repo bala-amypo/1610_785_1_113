@@ -3,6 +3,7 @@ package com.example.demo.service.impl;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
 
 import com.example.demo.dto.AuthRequest;
 import com.example.demo.dto.AuthResponse;
@@ -13,6 +14,7 @@ import com.example.demo.repository.RoleRepository;
 import com.example.demo.security.JwtTokenProvider;
 import com.example.demo.service.AuthService;
 
+@Service  // ✅ IMPORTANT
 public class AuthServiceImpl implements AuthService {
 
     private final AppUserRepository userRepo;
@@ -21,7 +23,7 @@ public class AuthServiceImpl implements AuthService {
     private final AuthenticationManager authManager;
     private final JwtTokenProvider tokenProvider;
 
-    // 🔥 EXACT constructor order
+    // ✅ CONSTRUCTOR INJECTION (CORRECT)
     public AuthServiceImpl(
             AppUserRepository userRepo,
             RoleRepository roleRepo,
@@ -36,6 +38,7 @@ public class AuthServiceImpl implements AuthService {
         this.tokenProvider = tokenProvider;
     }
 
+    // ✅ REGISTER
     @Override
     public void register(AuthRequest request) {
 
@@ -56,32 +59,32 @@ public class AuthServiceImpl implements AuthService {
         userRepo.save(user);
     }
 
+    // ✅ LOGIN
     @Override
     public AuthResponse login(AuthRequest request) {
 
+        // authenticate credentials
         authManager.authenticate(
-            new UsernamePasswordAuthenticationToken(
-                request.getEmail(),
-                request.getPassword()
-            )
+                new UsernamePasswordAuthenticationToken(
+                        request.getEmail(),
+                        request.getPassword()
+                )
         );
 
         AppUser user = userRepo.findByEmail(request.getEmail())
                 .orElseThrow(() ->
-                    new IllegalArgumentException("Invalid credentials"));
+                        new IllegalArgumentException("Invalid credentials"));
 
         String role = user.getRoles().iterator().next().getName();
 
-        // String token = tokenProvider.generateToken(
-        //         null,
-        //         user.getId(),
-        //         user.getEmail(),
-        //         role
-        // );
+        // ✅ CORRECT TOKEN GENERATION (NO EXTRA ARGUMENTS)
+        String token = tokenProvider.generateToken(user.getEmail());
 
-
-        //  String token = jwtTokenProvider.generateToken(user.getEmail()); 
-
-        return new AuthResponse(token, user.getId(), user.getEmail(), role);
+        return new AuthResponse(
+                token,
+                user.getId(),
+                user.getEmail(),
+                role
+        );
     }
 }
