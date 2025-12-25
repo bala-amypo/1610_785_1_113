@@ -1,7 +1,7 @@
 package com.example.demo.service.impl;
 
 import com.example.demo.dto.AuthRequest;
-import com.example.demo.dto.JwtResponse;
+import com.example.demo.dto.AuthResponse;
 import com.example.demo.entity.AppUser;
 import com.example.demo.repository.AppUserRepository;
 import com.example.demo.security.JwtTokenProvider;
@@ -11,7 +11,9 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
 
+@Service   // 🔥 THIS IS THE KEY LINE
 public class AuthServiceImpl implements AuthService {
 
     private final AppUserRepository userRepo;
@@ -19,7 +21,6 @@ public class AuthServiceImpl implements AuthService {
     private final AuthenticationManager authenticationManager;
     private final JwtTokenProvider tokenProvider;
 
-    // ✅ constructor order SAFE for tests
     public AuthServiceImpl(
             AppUserRepository userRepo,
             PasswordEncoder encoder,
@@ -34,16 +35,14 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public void register(AuthRequest request) {
-
         AppUser user = new AppUser();
         user.setEmail(request.getEmail());
         user.setPassword(encoder.encode(request.getPassword()));
-
         userRepo.save(user);
     }
 
     @Override
-    public JwtResponse login(AuthRequest request) {
+    public AuthResponse login(AuthRequest request) {
 
         Authentication auth = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
@@ -59,6 +58,6 @@ public class AuthServiceImpl implements AuthService {
                 null
         );
 
-        return new JwtResponse(token);
+        return new AuthResponse(token);
     }
 }
