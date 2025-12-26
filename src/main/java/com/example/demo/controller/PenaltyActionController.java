@@ -40,41 +40,41 @@
 
 
 
-package com.example.demo.controller;
+// package com.example.demo.controller;
 
-import com.example.demo.entity.PenaltyAction;
-import com.example.demo.service.PenaltyActionService;
-import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+// import com.example.demo.entity.PenaltyAction;
+// import com.example.demo.service.PenaltyActionService;
+// import jakarta.validation.Valid;
+// import org.springframework.beans.factory.annotation.Autowired;
+// import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+// import java.util.List;
 
-@RestController
-@RequestMapping("/api/penalties")
-public class PenaltyActionController {
+// @RestController
+// @RequestMapping("/api/penalties")
+// public class PenaltyActionController {
 
-    @Autowired
-    private PenaltyActionService service;
+//     @Autowired
+//     private PenaltyActionService service;
 
-    @PostMapping
-    public PenaltyAction addPenalty(@Valid @RequestBody PenaltyAction penalty) {
-        return service.addPenalty(penalty);
-    }
+//     @PostMapping
+//     public PenaltyAction addPenalty(@Valid @RequestBody PenaltyAction penalty) {
+//         return service.addPenalty(penalty);
+//     }
 
-    @GetMapping
-    public List<PenaltyAction> getAllPenalties() {
-        return service.getAllPenalties();
-    }
+//     @GetMapping
+//     public List<PenaltyAction> getAllPenalties() {
+//         return service.getAllPenalties();
+//     }
 
-    @GetMapping("/{id}")
-    public PenaltyAction getPenaltyById(@PathVariable Long id) {
-        return service.getPenaltyById(id);
-    }
+//     @GetMapping("/{id}")
+//     public PenaltyAction getPenaltyById(@PathVariable Long id) {
+//         return service.getPenaltyById(id);
+//     }
 
-    @GetMapping("/case/{caseId}")
-    public List<PenaltyAction> getPenaltiesByCase(@PathVariable Long caseId) {
-        return service.getPenaltiesByCase(caseId);
-    }
-}
+//     @GetMapping("/case/{caseId}")
+//     public List<PenaltyAction> getPenaltiesByCase(@PathVariable Long caseId) {
+//         return service.getPenaltiesByCase(caseId);
+//     }
+// }
  
