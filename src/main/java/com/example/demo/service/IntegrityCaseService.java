@@ -17,4 +17,3 @@ public interface IntegrityCaseService {
     List<IntegrityCase> getAllCases();
 } 
 
-
