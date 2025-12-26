@@ -28,3 +28,6 @@ public interface StudentProfileService {
     List<StudentProfile> getAllStudents();
     StudentProfile updateRepeatOffenderStatus(Long studentId);
 }
+
+
+
