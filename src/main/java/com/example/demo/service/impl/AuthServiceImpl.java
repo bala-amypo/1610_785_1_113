@@ -65,8 +65,6 @@
 
 
 
-
-
 package com.example.demo.service.impl;
 
 import com.example.demo.dto.JwtResponse;
@@ -85,53 +83,61 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class AuthServiceImpl {
-    
+
     private final AppUserRepository appUserRepository;
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
     private final JwtTokenProvider jwtTokenProvider;
-    
+
     public AuthServiceImpl(AppUserRepository appUserRepository,
-                          RoleRepository roleRepository,
-                          PasswordEncoder passwordEncoder,
-                          AuthenticationManager authenticationManager,
-                          JwtTokenProvider jwtTokenProvider) {
+                           RoleRepository roleRepository,
+                           PasswordEncoder passwordEncoder,
+                           AuthenticationManager authenticationManager,
+                           JwtTokenProvider jwtTokenProvider) {
         this.appUserRepository = appUserRepository;
         this.roleRepository = roleRepository;
         this.passwordEncoder = passwordEncoder;
         this.authenticationManager = authenticationManager;
         this.jwtTokenProvider = jwtTokenProvider;
     }
-    
+
+    // ✅ REGISTER
     public void register(RegisterRequest request) {
         if (appUserRepository.existsByEmail(request.getEmail())) {
             throw new IllegalArgumentException("Email already exists");
         }
-        
+
         Role role = roleRepository.findByName(request.getRole())
-            .orElseThrow(() -> new RuntimeException("Role not found"));
-        
+                .orElseThrow(() -> new RuntimeException("Role not found"));
+
         AppUser user = new AppUser();
         user.setEmail(request.getEmail());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setFullName(request.getFullName());
         user.getRoles().add(role);
-        
+
         appUserRepository.save(user);
     }
-    
+
+    // ✅ LOGIN (FIXED)
     public JwtResponse login(LoginRequest request) {
+
         Authentication authentication = authenticationManager.authenticate(
-            new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
+                new UsernamePasswordAuthenticationToken(
+                        request.getEmail(),
+                        request.getPassword()
+                )
         );
-        
+
         AppUser user = appUserRepository.findByEmail(request.getEmail())
-            .orElseThrow(() -> new IllegalArgumentException("User not found"));
-        
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+
         String roleName = user.getRoles().iterator().next().getName();
-        String token = jwtTokenProvider.generateToken(authentication, user.getId(), user.getEmail(), roleName);
-        
+
+        // ✅ CORRECT JWT CALL
+        String token = jwtTokenProvider.generateToken(authentication.getName());
+
         return new JwtResponse(token, user.getEmail(), roleName);
     }
 }
