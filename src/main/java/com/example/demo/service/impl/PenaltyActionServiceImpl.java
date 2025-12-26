@@ -51,43 +51,35 @@
 
 
 
-
-
 package com.example.demo.service.impl;
 
+import com.example.demo.entity.IntegrityCase;
 import com.example.demo.entity.PenaltyAction;
+import com.example.demo.repository.IntegrityCaseRepository;
 import com.example.demo.repository.PenaltyActionRepository;
 import com.example.demo.service.PenaltyActionService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.Optional;
 
 @Service
 public class PenaltyActionServiceImpl implements PenaltyActionService {
-
-    @Autowired
-    private PenaltyActionRepository repository;
-
+    
+    private final PenaltyActionRepository penaltyActionRepository;
+    private final IntegrityCaseRepository integrityCaseRepository;
+    
+    public PenaltyActionServiceImpl(PenaltyActionRepository penaltyActionRepository,
+                                  IntegrityCaseRepository integrityCaseRepository) {
+        this.penaltyActionRepository = penaltyActionRepository;
+        this.integrityCaseRepository = integrityCaseRepository;
+    }
+    
     @Override
     public PenaltyAction addPenalty(PenaltyAction penalty) {
-        return repository.save(penalty);
+        IntegrityCase integrityCase = integrityCaseRepository.findById(penalty.getIntegrityCase().getId())
+            .orElseThrow(() -> new RuntimeException("Case not found"));
+        
+        integrityCase.setStatus("UNDER_REVIEW");
+        integrityCaseRepository.save(integrityCase);
+        
+        return penaltyActionRepository.save(penalty);
     }
-
-    @Override
-    public List<PenaltyAction> getAllPenalties() {
-        return repository.findAll();
-    }
-
-    @Override
-    public PenaltyAction getPenaltyById(Long id) {
-        Optional<PenaltyAction> penalty = repository.findById(id);
-        return penalty.orElse(null); // or throw custom exception
-    }
-
-    @Override
-    public List<PenaltyAction> getPenaltiesByCase(Long caseId) {
-        return repository.findByIntegrityCaseId(caseId);
-    }
-} 
+}
