@@ -1,469 +1,68 @@
-package com.example.demo.servlet;
+package com.example.demo.entity;
 
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import java.io.IOException;
-
-public class BasicServlet extends HttpServlet {
-
-    @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        resp.setStatus(HttpServletResponse.SC_OK);
-        resp.getWriter().write("Servlet is running");
-    }
-
-    @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        resp.setStatus(HttpServletResponse.SC_CREATED);
-        resp.getWriter().write("Servlet POST handled");
-    }
-}             00000 package com.example.demo.entity;
-
-import jakarta.persistence.*;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
+import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+
 @Entity
+@Table(name = "student_profiles")
 public class StudentProfile {
 
+
+
+
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank(message = "StudentId cannot be blank")
+    @Column(unique = true, nullable = false)
     private String studentId;
+
+    @NotBlank(message = "Name cannot be blank")
     private String name;
+
+    @Email(message = "Invalid email format")
+    @Column(unique = true)
     private String email;
+
     private String program;
+
+    @NotNull(message = "Year level cannot be null")
     private Integer yearLevel;
+
     private Boolean repeatOffender = false;
 
-    private LocalDateTime createdAt = LocalDateTime.now();
+    private LocalDateTime createdAt;
 
-    @OneToMany(mappedBy = "studentProfile")
-    private List<IntegrityCase> integrityCases = new ArrayList<>();
+    @OneToMany(mappedBy = "studentProfile", cascade = CascadeType.ALL)
+    private List<IntegrityCase> integrityCases;
 
-    // getters & setters
+    public StudentProfile() {}
+
+    @PrePersist
+    public void prePersist() {
+        this.createdAt = LocalDateTime.now();
+        this.repeatOffender = false;
+    }
+
+    // Getters and Setters
     public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
-
     public String getStudentId() { return studentId; }
     public void setStudentId(String studentId) { this.studentId = studentId; }
-
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }
-
     public String getEmail() { return email; }
     public void setEmail(String email) { this.email = email; }
-
     public String getProgram() { return program; }
     public void setProgram(String program) { this.program = program; }
-
     public Integer getYearLevel() { return yearLevel; }
     public void setYearLevel(Integer yearLevel) { this.yearLevel = yearLevel; }
-
     public Boolean getRepeatOffender() { return repeatOffender; }
     public void setRepeatOffender(Boolean repeatOffender) { this.repeatOffender = repeatOffender; }
-
     public LocalDateTime getCreatedAt() { return createdAt; }
-
-    public List<IntegrityCase> getIntegrityCases() { return integrityCases; }
-}
- package com.example.demo.entity;
-
-import jakarta.persistence.*;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-
-@Entity
-public class IntegrityCase {
-
-    @Id
-    @GeneratedValue
-    private Long id;
-
-    @ManyToOne
-    private StudentProfile studentProfile;
-
-    private String courseCode;
-    private String instructorName;
-    private String description;
-    private String status = "OPEN";
-    private LocalDate incidentDate;
-    private LocalDateTime createdAt = LocalDateTime.now();
-
-    @OneToMany(mappedBy = "integrityCase")
-    private List<PenaltyAction> penalties = new ArrayList<>();
-
-    // getters & setters
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
-
-    public StudentProfile getStudentProfile() { return studentProfile; }
-    public void setStudentProfile(StudentProfile studentProfile) { this.studentProfile = studentProfile; }
-
-    public String getCourseCode() { return courseCode; }
-    public void setCourseCode(String courseCode) { this.courseCode = courseCode; }
-
-    public String getInstructorName() { return instructorName; }
-    public void setInstructorName(String instructorName) { this.instructorName = instructorName; }
-
-    public String getDescription() { return description; }
-    public void setDescription(String description) { this.description = description; }
-
-    public String getStatus() { return status; }
-    public void setStatus(String status) { this.status = status; }
-
-    public LocalDate getIncidentDate() { return incidentDate; }
-    public void setIncidentDate(LocalDate incidentDate) { this.incidentDate = incidentDate; }
-
-    public LocalDateTime getCreatedAt() { return createdAt; }
-
-    public List<PenaltyAction> getPenalties() { return penalties; }
-}                    0000000000 package com.example.demo.entity;
-
-import jakarta.persistence.*;
-import java.time.LocalDateTime;
-
-@Entity
-public class EvidenceRecord {
-
-    @Id
-    @GeneratedValue
-    private Long id;
-
-    @ManyToOne
-    private IntegrityCase integrityCase;
-
-    private String evidenceType;
-    private String content;
-    private String submittedBy;
-    private LocalDateTime submittedAt = LocalDateTime.now();
-
-    // getters & setters
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
-
-    public IntegrityCase getIntegrityCase() { return integrityCase; }
-    public void setIntegrityCase(IntegrityCase integrityCase) { this.integrityCase = integrityCase; }
-
-    public String getEvidenceType() { return evidenceType; }
-    public void setEvidenceType(String evidenceType) { this.evidenceType = evidenceType; }
-
-    public String getContent() { return content; }
-    public void setContent(String content) { this.content = content; }
-
-    public String getSubmittedBy() { return submittedBy; }
-    public void setSubmittedBy(String submittedBy) { this.submittedBy = submittedBy; }
-
-    public LocalDateTime getSubmittedAt() { return submittedAt; }
-}
- package com.example.demo.entity;
-
-import jakarta.persistence.*;
-import java.time.LocalDateTime;
-
-@Entity
-public class PenaltyAction {
-
-    @Id
-    @GeneratedValue
-    private Long id;
-
-    @ManyToOne
-    private IntegrityCase integrityCase;
-
-    private String penaltyType;
-    private String details;
-    private String issuedBy;
-    private LocalDateTime issuedAt = LocalDateTime.now();
-
-    // getters & setters
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
-
-    public IntegrityCase getIntegrityCase() { return integrityCase; }
-    public void setIntegrityCase(IntegrityCase integrityCase) { this.integrityCase = integrityCase; }
-
-    public String getPenaltyType() { return penaltyType; }
-    public void setPenaltyType(String penaltyType) { this.penaltyType = penaltyType; }
-
-    public String getDetails() { return details; }
-    public void setDetails(String details) { this.details = details; }
-
-    public String getIssuedBy() { return issuedBy; }
-    public void setIssuedBy(String issuedBy) { this.issuedBy = issuedBy; }
-
-    public LocalDateTime getIssuedAt() { return issuedAt; }
-}                      000000000000000  package com.example.demo.entity;
-
-import jakarta.persistence.*;
-
-@Entity
-public class RepeatOffenderRecord {
-
-    @Id
-    @GeneratedValue
-    private Long id;
-
-    @ManyToOne
-    private StudentProfile studentProfile;
-
-    private Integer totalCases;
-    private String flagSeverity;
-
-    // getters & setters
-    public StudentProfile getStudentProfile() { return studentProfile; }
-    public void setStudentProfile(StudentProfile studentProfile) { this.studentProfile = studentProfile; }
-
-    public Integer getTotalCases() { return totalCases; }
-    public void setTotalCases(Integer totalCases) { this.totalCases = totalCases; }
-
-    public String getFlagSeverity() { return flagSeverity; }
-    public void setFlagSeverity(String flagSeverity) { this.flagSeverity = flagSeverity; }
-}
- package com.example.demo.util;
-
-import com.example.demo.entity.*;
-import java.util.List;
-
-public class RepeatOffenderCalculator {
-
-    public RepeatOffenderRecord computeRepeatOffenderRecord(StudentProfile s, List<IntegrityCase> cases) {
-        RepeatOffenderRecord r = new RepeatOffenderRecord();
-        r.setStudentProfile(s);
-        r.setTotalCases(cases.size());
-
-        if (cases.size() >= 4) r.setFlagSeverity("HIGH");
-        else if (cases.size() >= 2) r.setFlagSeverity("MEDIUM");
-        else r.setFlagSeverity("LOW");
-
-        return r;
-    }
-}                      000000000 package com.example.demo.service.impl;
-
-import com.example.demo.entity.*;
-import com.example.demo.exception.ResourceNotFoundException;
-import com.example.demo.repository.*;
-import com.example.demo.util.RepeatOffenderCalculator;
-import java.util.List;
-
-public class StudentProfileServiceImpl implements StudentProfileService {
-
-    private final StudentProfileRepository repo;
-    private final IntegrityCaseRepository caseRepo;
-    private final RepeatOffenderRecordRepository recordRepo;
-    private final RepeatOffenderCalculator calc;
-
-    public StudentProfileServiceImpl(StudentProfileRepository repo,
-                                     IntegrityCaseRepository caseRepo,
-                                     RepeatOffenderRecordRepository recordRepo,
-                                     RepeatOffenderCalculator calc) {
-        this.repo = repo;
-        this.caseRepo = caseRepo;
-        this.recordRepo = recordRepo;
-        this.calc = calc;
-    }
-
-    public StudentProfile createStudent(StudentProfile s) {
-        s.setRepeatOffender(false);
-        return repo.save(s);
-    }
-
-    public StudentProfile getStudentById(Long id) {
-        return repo.findById(id).orElseThrow(() -> new ResourceNotFoundException("Student not found"));
-    }
-
-    public List<StudentProfile> getAllStudents() {
-        return repo.findAll();
-    }
-
-    public StudentProfile updateRepeatOffenderStatus(Long id) {
-        StudentProfile s = getStudentById(id);
-        List<IntegrityCase> cases = caseRepo.findByStudentProfile(s);
-
-        RepeatOffenderRecord record = calc.computeRepeatOffenderRecord(s, cases);
-        recordRepo.save(record);
-
-        s.setRepeatOffender(record.getTotalCases() >= 2);
-        return repo.save(s);
-    }
-}
- package com.example.demo.service.impl;
-
-import com.example.demo.entity.*;
-import com.example.demo.repository.*;
-import java.util.*;
-
-public class IntegrityCaseServiceImpl implements IntegrityCaseService {
-
-    private final IntegrityCaseRepository repo;
-    private final StudentProfileRepository studentRepo;
-
-    public IntegrityCaseServiceImpl(IntegrityCaseRepository repo, StudentProfileRepository studentRepo) {
-        this.repo = repo;
-        this.studentRepo = studentRepo;
-    }
-
-    public IntegrityCase createCase(IntegrityCase c) {
-        if (c.getStudentProfile() == null || c.getStudentProfile().getId() == null)
-            throw new IllegalArgumentException("Student missing");
-
-        studentRepo.findById(c.getStudentProfile().getId())
-                .orElseThrow(() -> new IllegalArgumentException("Student missing"));
-
-        return repo.save(c);
-    }
-
-    public IntegrityCase updateCaseStatus(Long id, String status) {
-        IntegrityCase c = repo.findById(id).orElseThrow();
-        c.setStatus(status);
-        return repo.save(c);
-    }
-
-    public List<IntegrityCase> getCasesByStudent(Long id) {
-        return repo.findByStudentProfile_Id(id);
-    }
-
-    public Optional<IntegrityCase> getCaseById(Long id) {
-        return repo.findById(id);
-    }
-}                        package com.example.demo.service.impl;
-
-import com.example.demo.entity.*;
-import com.example.demo.repository.*;
-
-public class EvidenceRecordServiceImpl implements EvidenceRecordService {
-
-    private final EvidenceRecordRepository repo;
-    private final IntegrityCaseRepository caseRepo;
-
-    public EvidenceRecordServiceImpl(EvidenceRecordRepository repo, IntegrityCaseRepository caseRepo) {
-        this.repo = repo;
-        this.caseRepo = caseRepo;
-    }
-
-    public EvidenceRecord submitEvidence(EvidenceRecord e) {
-        caseRepo.findById(e.getIntegrityCase().getId()).orElseThrow();
-        return repo.save(e);
-    }
-}
- package com.example.demo.service.impl;
-
-import com.example.demo.entity.*;
-import com.example.demo.repository.*;
-
-public class PenaltyActionServiceImpl implements PenaltyActionService {
-
-    private final PenaltyActionRepository repo;
-    private final IntegrityCaseRepository caseRepo;
-
-    public PenaltyActionServiceImpl(PenaltyActionRepository repo, IntegrityCaseRepository caseRepo) {
-        this.repo = repo;
-        this.caseRepo = caseRepo;
-    }
-
-    public PenaltyAction addPenalty(PenaltyAction p) {
-        IntegrityCase c = caseRepo.findById(p.getIntegrityCase().getId()).orElseThrow();
-        c.setStatus("UNDER_REVIEW");
-        caseRepo.save(c);
-        return repo.save(p);
-    }
-}                        000000000000package com.example.demo.security;
-
-import io.jsonwebtoken.*;
-import java.util.Date;
-
-public class JwtTokenProvider {
-
-    private final String secret;
-    private final long validity;
-
-    public JwtTokenProvider(String secret, long validity) {
-        this.secret = secret;
-        this.validity = validity;
-    }
-
-    public String generateToken(org.springframework.security.core.Authentication auth,
-                                Long id, String email, String role) {
-        return Jwts.builder()
-                .setSubject(email)
-                .claim("userId", id)
-                .claim("role", role)
-                .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + validity))
-                .signWith(SignatureAlgorithm.HS256, secret)
-                .compact();
-    }
-
-    public boolean validateToken(String token) {
-        try {
-            Jwts.parser().setSigningKey(secret).parseClaimsJws(token);
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
-    }
-
-    public String getUsernameFromToken(String token) {
-        return Jwts.parser().setSigningKey(secret)
-                .parseClaimsJws(token)
-                .getBody()
-                .getSubject();
-    }
-}
- package com.example.demo.service.impl;
-
-import com.example.demo.dto.*;
-import com.example.demo.entity.*;
-import com.example.demo.repository.*;
-import com.example.demo.security.JwtTokenProvider;
-import org.springframework.security.authentication.*;
-import org.springframework.security.crypto.password.PasswordEncoder;
-
-public class AuthServiceImpl {
-
-    private final AppUserRepository userRepo;
-    private final RoleRepository roleRepo;
-    private final PasswordEncoder encoder;
-    private final AuthenticationManager authManager;
-    private final JwtTokenProvider jwt;
-
-    public AuthServiceImpl(AppUserRepository u, RoleRepository r, PasswordEncoder e,
-                           AuthenticationManager a, JwtTokenProvider j) {
-        this.userRepo = u; this.roleRepo = r; this.encoder = e;
-        this.authManager = a; this.jwt = j;
-    }
-
-    public void register(RegisterRequest req) {
-        if (userRepo.existsByEmail(req.getEmail()))
-            throw new IllegalArgumentException("Email exists");
-
-        Role role = roleRepo.findByName(req.getRole()).orElseThrow();
-
-        AppUser user = new AppUser();
-        user.setEmail(req.getEmail());
-        user.setFullName(req.getFullName());
-        user.setPassword(encoder.encode(req.getPassword()));
-        user.getRoles().add(role);
-
-        userRepo.save(user);
-    }
-
-    public JwtResponse login(LoginRequest req) {
-        Authentication auth = authManager.authenticate(
-                new UsernamePasswordAuthenticationToken(req.getEmail(), req.getPassword())
-        );
-
-        AppUser user = userRepo.findByEmail(req.getEmail())
-                .orElseThrow(() -> new IllegalArgumentException("User not found"));
-
-        String role = user.getRoles().iterator().next().getName();
-        String token = jwt.generateToken(auth, user.getId(), user.getEmail(), role);
-
-        return new JwtResponse(token, user.getEmail(), role);
-    }
-}
+} 
