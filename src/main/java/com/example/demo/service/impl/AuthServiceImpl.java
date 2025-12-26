@@ -64,7 +64,6 @@
 
 
 
-
 package com.example.demo.service.impl;
 
 import com.example.demo.dto.JwtResponse;
@@ -90,11 +89,13 @@ public class AuthServiceImpl {
     private final AuthenticationManager authenticationManager;
     private final JwtTokenProvider jwtTokenProvider;
 
-    public AuthServiceImpl(AppUserRepository appUserRepository,
-                           RoleRepository roleRepository,
-                           PasswordEncoder passwordEncoder,
-                           AuthenticationManager authenticationManager,
-                           JwtTokenProvider jwtTokenProvider) {
+    public AuthServiceImpl(
+            AppUserRepository appUserRepository,
+            RoleRepository roleRepository,
+            PasswordEncoder passwordEncoder,
+            AuthenticationManager authenticationManager,
+            JwtTokenProvider jwtTokenProvider) {
+
         this.appUserRepository = appUserRepository;
         this.roleRepository = roleRepository;
         this.passwordEncoder = passwordEncoder;
@@ -102,8 +103,9 @@ public class AuthServiceImpl {
         this.jwtTokenProvider = jwtTokenProvider;
     }
 
-    // ✅ REGISTER
+    // ================= REGISTER =================
     public void register(RegisterRequest request) {
+
         if (appUserRepository.existsByEmail(request.getEmail())) {
             throw new IllegalArgumentException("Email already exists");
         }
@@ -120,7 +122,7 @@ public class AuthServiceImpl {
         appUserRepository.save(user);
     }
 
-    // ✅ LOGIN (FIXED)
+    // ================= LOGIN =================
     public JwtResponse login(LoginRequest request) {
 
         Authentication authentication = authenticationManager.authenticate(
@@ -135,7 +137,7 @@ public class AuthServiceImpl {
 
         String roleName = user.getRoles().iterator().next().getName();
 
-        // ✅ CORRECT JWT CALL
+        // ✅ CORRECT JWT CALL (matches JwtTokenProvider)
         String token = jwtTokenProvider.generateToken(authentication.getName());
 
         return new JwtResponse(token, user.getEmail(), roleName);
