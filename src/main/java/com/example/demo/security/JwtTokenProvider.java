@@ -62,30 +62,60 @@
 
 package com.example.demo.security;
 
+import java.security.Key;
 import java.util.Date;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.security.Keys;
 
 @Component
 public class JwtTokenProvider {
 
-    private final String jwtSecret = "testSecretKey123456";
-    private final long jwtExpirationMs = 86400000; // 1 day
+    private final String jwtSecret = "testSecretKey123456testSecretKey123456";
+    private final long jwtExpirationMs = 86400000;
 
-    // ✅ THIS METHOD IS REQUIRED BY TEST CASES
+    private Key getSigningKey() {
+        return Keys.hmacShaKeyFor(jwtSecret.getBytes());
+    }
+
+    // ✅ REQUIRED BY TEST CASES
     public String generateToken(Authentication authentication) {
 
-        String username = authentication.getName();
-
         return Jwts.builder()
-                .setSubject(username)
+                .setSubject(authentication.getName())
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(new Date().getTime() + jwtExpirationMs))
-                .signWith(SignatureAlgorithm.HS256, jwtSecret)
+                .setExpiration(new Date(System.currentTimeMillis() + jwtExpirationMs))
+                .signWith(getSigningKey(), SignatureAlgorithm.HS256)
                 .compact();
+    }
+
+    // ✅ REQUIRED BY JwtAuthenticationFilter
+    public String getUsernameFromToken(String token) {
+
+        Claims claims = Jwts.parserBuilder()
+                .setSigningKey(getSigningKey())
+                .build()                    // 🔥 THIS WAS MISSING
+                .parseClaimsJws(token)
+                .getBody();
+
+        return claims.getSubject();
+    }
+
+    // ✅ REQUIRED BY JwtAuthenticationFilter
+    public boolean validateToken(String token) {
+        try {
+            Jwts.parserBuilder()
+                .setSigningKey(getSigningKey())
+                .build()                // 🔥 THIS WAS MISSING
+                .parseClaimsJws(token);
+            return true;
+        } catch (Exception ex) {
+            return false;
+        }
     }
 }
