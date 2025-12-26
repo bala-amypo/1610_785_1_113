@@ -15,7 +15,7 @@ public class JwtTokenProvider {
     private final String jwtSecret = "testSecretKey";
     private final long jwtExpirationMs = 86400000;
 
-    // ✅ REQUIRED BY TEST CASES
+    // 🔥 TEST CASE EXPECTS THIS
     public String generateToken(String username) {
         return Jwts.builder()
                 .setSubject(username)
@@ -25,27 +25,26 @@ public class JwtTokenProvider {
                 .compact();
     }
 
-    // ✅ REQUIRED BY SPRING SECURITY
+    // 🔥 SPRING SECURITY USES THIS
     public String generateToken(Authentication authentication) {
         return generateToken(authentication.getName());
     }
 
-    // ✅ REQUIRED BY TEST CASES
+    // 🔥 TEST CASE EXPECTS THIS
     public String getUsernameFromToken(String token) {
         Claims claims = Jwts.parser()
                 .setSigningKey(jwtSecret)
                 .parseClaimsJws(token)
                 .getBody();
-
         return claims.getSubject();
     }
 
-    // ✅ REQUIRED BY TEST CASES
+    // 🔥 TEST CASE EXPECTS THIS
     public boolean validateToken(String token) {
         try {
             Jwts.parser()
-                    .setSigningKey(jwtSecret)
-                    .parseClaimsJws(token);
+                .setSigningKey(jwtSecret)
+                .parseClaimsJws(token);
             return true;
         } catch (Exception e) {
             return false;
