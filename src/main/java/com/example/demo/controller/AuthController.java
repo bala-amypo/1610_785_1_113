@@ -1,33 +1,32 @@
-//  package com.example.demo.controller;
+package com.example.demo.controller;
 
-// import jakarta.validation.Valid;
+import com.example.demo.dto.*;
+import com.example.demo.service.AuthService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
-// import org.springframework.web.bind.annotation.*;
+@RestController
+@RequestMapping("/auth")
+@Tag(name = "Authentication")
+public class AuthController {
+    private final AuthService authService;
 
-// import com.example.demo.dto.AuthRequest;
-// import com.example.demo.dto.AuthResponse;
-// import com.example.demo.service.AuthService;
+    public AuthController(AuthService authService) {
+        this.authService = authService;
+    }
 
-// @RestController
-// @RequestMapping("/auth")
-// public class AuthController {
+    @PostMapping("/register")
+    @Operation(summary = "Register user")
+    public ResponseEntity<String> register(@RequestBody RegisterRequest req) {
+        authService.register(req);
+        return ResponseEntity.ok("User registered successfully");
+    }
 
-//     private final AuthService service;
-
-//     public AuthController(AuthService service) {
-//         this.service = service;
-//     }
-
-//     @PostMapping("/register")
-//     public void register(@Valid @RequestBody AuthRequest request) {
-//         service.register(request);
-//     }
-
-//     @PostMapping("/login")
-//     public AuthResponse login(@Valid @RequestBody AuthRequest request) {
-//         return service.login(request);
-//     }
-// }
-
-
-
+    @PostMapping("/login")
+    @Operation(summary = "Login user")
+    public ResponseEntity<JwtResponse> login(@RequestBody LoginRequest req) {
+        return ResponseEntity.ok(authService.login(req));
+    }
+}
