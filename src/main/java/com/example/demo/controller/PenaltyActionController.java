@@ -1,80 +1,25 @@
-// package com.example.demo.controller;
+package com.example.demo.controller;
 
-// import java.util.List;
-// import jakarta.validation.Valid;
+import com.example.demo.entity.PenaltyAction;
+import com.example.demo.service.PenaltyActionService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
+@RestController
+@RequestMapping("/api/penalties")
+@Tag(name = "Penalty Actions")
+public class PenaltyActionController {
+    private final PenaltyActionService service;
 
-// import org.springframework.beans.factory.annotation.Autowired;
-// import org.springframework.web.bind.annotation.*;
+    public PenaltyActionController(PenaltyActionService service) {
+        this.service = service;
+    }
 
-// import com.example.demo.entity.PenaltyAction;
-// import com.example.demo.service.PenaltyActionService;
-
-// @RestController
-// @RequestMapping("/api/penalties")
-// public class PenaltyActionController {
-
-//     @Autowired
-//     private PenaltyActionService service;
-
-//     @PostMapping("p3")
-//     public PenaltyAction addPenalty(@Valid @RequestBody PenaltyAction penalty) {
-//         return service.addPenalty(penalty);
-//     }
-
-//     @GetMapping("g3/case/{caseId}")
-//     public List<PenaltyAction> getPenaltiesByCase(@PathVariable Long caseId) {
-//         return service.getPenaltiesByCase(caseId);
-//     }
-
-//     @GetMapping("ge3/{id}")
-//     public PenaltyAction getPenaltyById(@PathVariable Long id) {
-//         return service.getPenaltyById(id);
-//     }
-
-//     @GetMapping("get3")
-//     public List<PenaltyAction> getAllPenalties() {
-//         return service.getAllPenalties();
-//     }
-// }
-
-
-
-// package com.example.demo.controller;
-
-// import com.example.demo.entity.PenaltyAction;
-// import com.example.demo.service.PenaltyActionService;
-// import jakarta.validation.Valid;
-// import org.springframework.beans.factory.annotation.Autowired;
-// import org.springframework.web.bind.annotation.*;
-
-// import java.util.List;
-
-// @RestController
-// @RequestMapping("/api/penalties")
-// public class PenaltyActionController {
-
-//     @Autowired
-//     private PenaltyActionService service;
-
-//     @PostMapping
-//     public PenaltyAction addPenalty(@Valid @RequestBody PenaltyAction penalty) {
-//         return service.addPenalty(penalty);
-//     }
-
-//     @GetMapping
-//     public List<PenaltyAction> getAllPenalties() {
-//         return service.getAllPenalties();
-//     }
-
-//     @GetMapping("/{id}")
-//     public PenaltyAction getPenaltyById(@PathVariable Long id) {
-//         return service.getPenaltyById(id);
-//     }
-
-//     @GetMapping("/case/{caseId}")
-//     public List<PenaltyAction> getPenaltiesByCase(@PathVariable Long caseId) {
-//         return service.getPenaltiesByCase(caseId);
-//     }
-// }
- 
+    @PostMapping
+    @Operation(summary = "Add penalty")
+    public ResponseEntity<PenaltyAction> addPenalty(@RequestBody PenaltyAction p) {
+        return ResponseEntity.ok(service.addPenalty(p));
+    }
+}
