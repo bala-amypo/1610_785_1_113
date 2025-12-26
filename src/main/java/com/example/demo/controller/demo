@@ -1,213 +1,274 @@
 package com.example.demo.entity;
 
-import java.time.LocalDateTime;
-import java.util.List;
-
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.*;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "student_profiles")
-public class StudentProfile {
-
-
-
+@Table(name = "integrity_case")
+public class IntegrityCase {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank(message = "StudentId cannot be blank")
-    @Column(unique = true, nullable = false)
-    private String studentId;
+    @NotNull(message = "Student profile is mandatory")
+    @ManyToOne
+    @JoinColumn(name = "student_id")
+    private StudentProfile studentProfile;
 
-    @NotBlank(message = "Name cannot be blank")
-    private String name;
+    @NotBlank(message = "Course code is mandatory")
+    private String courseCode;
 
-    @Email(message = "Invalid email format")
-    @Column(unique = true)
-    private String email;
+    @NotBlank(message = "Instructor name is mandatory")
+    private String instructorName;
 
-    private String program;
+    @NotBlank(message = "Case description is mandatory")
+    private String description;
 
-    @NotNull(message = "Year level cannot be null")
-    private Integer yearLevel;
+    private String status;
 
-    private Boolean repeatOffender = false;
+    @NotNull(message = "Incident date is mandatory")
+    private LocalDate incidentDate;
 
     private LocalDateTime createdAt;
 
-    @OneToMany(mappedBy = "studentProfile", cascade = CascadeType.ALL)
-    private List<IntegrityCase> integrityCases;
-
-    public StudentProfile() {}
 
     @PrePersist
     public void prePersist() {
         this.createdAt = LocalDateTime.now();
-        this.repeatOffender = false;
+        this.status = "OPEN";
     }
 
-    // Getters and Setters
-    public Long getId() { return id; }
-    public String getStudentId() { return studentId; }
-    public void setStudentId(String studentId) { this.studentId = studentId; }
-    public String getName() { return name; }
-    public void setName(String name) { this.name = name; }
-    public String getEmail() { return email; }
-    public void setEmail(String email) { this.email = email; }
-    public String getProgram() { return program; }
-    public void setProgram(String program) { this.program = program; }
-    public Integer getYearLevel() { return yearLevel; }
-    public void setYearLevel(Integer yearLevel) { this.yearLevel = yearLevel; }
-    public Boolean getRepeatOffender() { return repeatOffender; }
-    public void setRepeatOffender(Boolean repeatOffender) { this.repeatOffender = repeatOffender; }
-    public LocalDateTime getCreatedAt() { return createdAt; }
-} 
+
+
+    public Long getId() { 
+        return id; 
+    }
+    public void setId(Long id) { 
+        this.id = id; 
+    }
+
+    public StudentProfile getStudentProfile() { 
+        return studentProfile; 
+    }
+    public void setStudentProfile(StudentProfile studentProfile) {
+         this.studentProfile = studentProfile; 
+    }
+
+    public String getCourseCode() { 
+        return courseCode; 
+    }
+    public void setCourseCode(String courseCode) {
+        this.courseCode = courseCode; 
+    }
+
+    public String getInstructorName() {
+        return instructorName; 
+    }
+    public void setInstructorName(String instructorName) { 
+         this.instructorName = instructorName; 
+    }
+
+    public String getDescription() { 
+        return description; 
+    }
+    public void setDescription(String description) {
+         this.description = description; 
+    }
+
+    public String getStatus() {
+         return status; 
+    }
+    public void setStatus(String status) { 
+        this.status = status; 
+    }
+
+    public LocalDate getIncidentDate() { 
+        return incidentDate; 
+    }
+    public void setIncidentDate(LocalDate incidentDate) {
+         this.incidentDate = incidentDate; 
+    }
+
+    public LocalDateTime getCreatedAt() {
+         return createdAt; 
+    }
+}
 
 
 
+// package com.example.demo.repository;
+
+// import java.time.LocalDate;
+// import java.util.List;
+
+// import org.springframework.data.jpa.repository.JpaRepository;
+
+// import com.example.demo.entity.IntegrityCase;
+// import com.example.demo.entity.StudentProfile;
+
+// public interface IntegrityCaseRepository extends JpaRepository<IntegrityCase, Long> {
+
+//     // Find all cases for a given StudentProfile
+//     List<IntegrityCase> findByStudentProfile(StudentProfile studentProfile);
+
+//     // ✅ Corrected: find by studentId through the relation
+//     List<IntegrityCase> findByStudentProfile_StudentId(String studentId);
+
+//     // Example: find recent cases by status and after a certain date
+//     List<IntegrityCase> findRecentCasesByStatus(String status, LocalDate date);
+
+//     // Find cases between dates
+//     List<IntegrityCase> findByIncidentDateBetween(LocalDate start, LocalDate end);
+
+// }
 
 
 package com.example.demo.repository;
 
-import java.util.Optional;
+import java.time.LocalDate;
+import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+
+import com.example.demo.entity.IntegrityCase;
 import com.example.demo.entity.StudentProfile;
 
-public interface StudentProfileRepository extends JpaRepository<StudentProfile, Long> {
+public interface IntegrityCaseRepository extends JpaRepository<IntegrityCase, Long> {
 
-    Optional<StudentProfile> findByStudentId(String studentId);
+    List<IntegrityCase> findByStudentProfile(StudentProfile studentProfile);
 
+    List<IntegrityCase> findByStudentProfile_StudentId(String studentId);
+
+    // Fixed method
+    List<IntegrityCase> findByStatusAndIncidentDateAfter(String status, LocalDate date);
+
+    List<IntegrityCase> findByIncidentDateBetween(LocalDate start, LocalDate end);
+
+    
 }
-
 
 
 // package com.example.demo.service;
 
 // import java.util.List;
-// import com.example.demo.entity.StudentProfile;
+// import java.util.Optional;
+// import com.example.demo.entity.IntegrityCase;
 
-// public interface StudentProfileService {
+// public interface IntegrityCaseService {
 
-//     StudentProfile createStudent(StudentProfile studentProfile);
+//     IntegrityCase createCase(IntegrityCase integrityCase);
 
-//     StudentProfile getStudentById(Long id);
+//     IntegrityCase updateCaseStatus(Long caseId, String status);
 
-//     List<StudentProfile> getAllStudents();
+//     List<IntegrityCase> getCasesByStudent(Long studentId);
 
-//     StudentProfile updateRepeatOffenderStatus(Long studentId);
+//     Optional<IntegrityCase> getCaseById(Long id);
 
-//     StudentProfile getStudentByStudentIdentifier(String studentIdentifier); 
-// }  
+//     List<IntegrityCase> getAllCases();
+// } 
 
 
 
 package com.example.demo.service.impl;
 
 import com.example.demo.entity.*;
-import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.repository.*;
-import com.example.demo.util.RepeatOffenderCalculator;
-import java.util.List;
+import java.util.*;
 
-public class StudentProfileServiceImpl implements StudentProfileService {
+public class IntegrityCaseServiceImpl implements IntegrityCaseService {
 
-    private final StudentProfileRepository repo;
-    private final IntegrityCaseRepository caseRepo;
-    private final RepeatOffenderRecordRepository recordRepo;
-    private final RepeatOffenderCalculator calc;
+    private final IntegrityCaseRepository repo;
+    private final StudentProfileRepository studentRepo;
 
-    public StudentProfileServiceImpl(StudentProfileRepository repo,
-                                     IntegrityCaseRepository caseRepo,
-                                     RepeatOffenderRecordRepository recordRepo,
-                                     RepeatOffenderCalculator calc) {
+    public IntegrityCaseServiceImpl(IntegrityCaseRepository repo, StudentProfileRepository studentRepo) {
         this.repo = repo;
-        this.caseRepo = caseRepo;
-        this.recordRepo = recordRepo;
-        this.calc = calc;
+        this.studentRepo = studentRepo;
     }
 
-    public StudentProfile createStudent(StudentProfile s) {
-        s.setRepeatOffender(false);
-        return repo.save(s);
+    public IntegrityCase createCase(IntegrityCase c) {
+        if (c.getStudentProfile() == null || c.getStudentProfile().getId() == null)
+            throw new IllegalArgumentException("Student missing");
+
+        studentRepo.findById(c.getStudentProfile().getId())
+                .orElseThrow(() -> new IllegalArgumentException("Student missing"));
+
+        return repo.save(c);
     }
 
-    public StudentProfile getStudentById(Long id) {
-        return repo.findById(id).orElseThrow(() -> new ResourceNotFoundException("Student not found"));
+    public IntegrityCase updateCaseStatus(Long id, String status) {
+        IntegrityCase c = repo.findById(id).orElseThrow();
+        c.setStatus(status);
+        return repo.save(c);
     }
 
-    public List<StudentProfile> getAllStudents() {
-        return repo.findAll();
+    public List<IntegrityCase> getCasesByStudent(Long id) {
+        return repo.findByStudentProfile_Id(id);
     }
 
-    public StudentProfile updateRepeatOffenderStatus(Long id) {
-        StudentProfile s = getStudentById(id);
-        List<IntegrityCase> cases = caseRepo.findByStudentProfile(s);
-
-        RepeatOffenderRecord record = calc.computeRepeatOffenderRecord(s, cases);
-        recordRepo.save(record);
-
-        s.setRepeatOffender(record.getTotalCases() >= 2);
-        return repo.save(s);
+    public Optional<IntegrityCase> getCaseById(Long id) {
+        return repo.findById(id);
     }
-}
-
+}  
 
 
 
 package com.example.demo.controller;
 
 import java.util.List;
+import java.util.Optional;
 
 import jakarta.validation.Valid;
 
 import org.springframework.web.bind.annotation.*;
 
-import com.example.demo.entity.StudentProfile;
-import com.example.demo.service.StudentProfileService;
+import com.example.demo.entity.IntegrityCase;
+import com.example.demo.service.IntegrityCaseService;
 
 @RestController
-@RequestMapping("/students")
-public class StudentProfileController {
+@RequestMapping("/cases")
+public class IntegrityCaseController {
 
-    private final StudentProfileService service;
+    private final IntegrityCaseService service;
 
-    public StudentProfileController(StudentProfileService service) {
+    public IntegrityCaseController(IntegrityCaseService service) {
         this.service = service;
     }
 
-    // 1️⃣ create student
+    // create case
     @PostMapping
-    public StudentProfile createStudent(@Valid @RequestBody StudentProfile student) {
-        return service.createStudent(student);
+    public IntegrityCase createCase(@Valid @RequestBody IntegrityCase integrityCase) {
+        return service.createCase(integrityCase);
     }
 
-    // 2️⃣ get by id
+    // update status
+    @PutMapping("/{id}/status")
+    public IntegrityCase updateStatus(
+            @PathVariable Long id,
+            @RequestParam String status) {
+        return service.updateCaseStatus(id, status);
+    }
+
+    // get by student
+    @GetMapping("/student/{studentId}")
+    public List<IntegrityCase> getCasesByStudent(@PathVariable Long studentId) {
+        return service.getCasesByStudent(studentId);
+    }
+
+    // get by id
     @GetMapping("/{id}")
-    public StudentProfile getStudentById(@PathVariable Long id) {
-        return service.getStudentById(id);
+    public Optional<IntegrityCase> getById(@PathVariable Long id) {
+        return service.getCaseById(id);
     }
 
-    // 3️⃣ get all students
+    // get all
     @GetMapping
-    public List<StudentProfile> getAllStudents() {
-        return service.getAllStudents();
+    public List<IntegrityCase> getAll() {
+        return service.getAllCases();
     }
-
-    // 4️⃣ update repeat offender status
-    @PutMapping("/{id}/repeat-status")
-    public StudentProfile updateRepeatStatus(@PathVariable Long id) {
-        return service.updateRepeatOffenderStatus(id);
-    }
-
-    // 5️⃣ get by studentIdentifier
-    @GetMapping("/identifier/{studentIdentifier}")
-    public StudentProfile getByStudentIdentifier(
-            @PathVariable String studentIdentifier) {
-        return service.getStudentByStudentIdentifier(studentIdentifier);
-    }
-} 
+}

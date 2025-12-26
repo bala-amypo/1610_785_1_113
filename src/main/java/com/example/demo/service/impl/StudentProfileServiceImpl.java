@@ -3,9 +3,12 @@ package com.example.demo.service.impl;
 import com.example.demo.entity.*;
 import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.repository.*;
+import com.example.demo.service.StudentProfileService;
 import com.example.demo.util.RepeatOffenderCalculator;
+import org.springframework.stereotype.Service;
 import java.util.List;
 
+@Service
 public class StudentProfileServiceImpl implements StudentProfileService {
 
     private final StudentProfileRepository repo;
@@ -23,19 +26,24 @@ public class StudentProfileServiceImpl implements StudentProfileService {
         this.calc = calc;
     }
 
+    @Override
     public StudentProfile createStudent(StudentProfile s) {
         s.setRepeatOffender(false);
         return repo.save(s);
     }
 
+    @Override
     public StudentProfile getStudentById(Long id) {
-        return repo.findById(id).orElseThrow(() -> new ResourceNotFoundException("Student not found"));
+        return repo.findById(id)
+                   .orElseThrow(() -> new ResourceNotFoundException("Student not found"));
     }
 
+    @Override
     public List<StudentProfile> getAllStudents() {
         return repo.findAll();
     }
 
+    @Override
     public StudentProfile updateRepeatOffenderStatus(Long id) {
         StudentProfile s = getStudentById(id);
         List<IntegrityCase> cases = caseRepo.findByStudentProfile(s);
@@ -46,4 +54,11 @@ public class StudentProfileServiceImpl implements StudentProfileService {
         s.setRepeatOffender(record.getTotalCases() >= 2);
         return repo.save(s);
     }
+
+    @Override
+    public StudentProfile getStudentByStudentIdentifier(String studentIdentifier) {
+        return repo.findByStudentId(studentIdentifier)
+                   .orElseThrow(() -> new ResourceNotFoundException("Student not found"));
+    }
 }
+ 
