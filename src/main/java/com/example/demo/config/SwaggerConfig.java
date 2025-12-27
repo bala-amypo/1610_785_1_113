@@ -1,24 +1,3 @@
-// package com.example.demo.config;
-
-// import io.swagger.v3.oas.models.OpenAPI;
-// import io.swagger.v3.oas.models.servers.Server;
-// import org.springframework.context.annotation.Bean;
-// import org.springframework.context.annotation.Configuration;
-// import java.util.List;
-
-// @Configuration
-// public class SwaggerConfig {
-
-//     @Bean
-//     public OpenAPI customOpenAPI() {
-//         return new OpenAPI()
-//                 // You need to change the port as per your server
-//                 .servers(List.of(
-//                         new Server().url("https://9130.408procr.amypo.ai/")
-//                 ));
-//         }
-// }
-
 
 package com.example.demo.config;
 
@@ -33,6 +12,6 @@ public class SwaggerConfig {
     @Bean
     public OpenAPI customOpenAPI() {
         return new OpenAPI()
-                .addServersItem(new Server().url("https://9134.pro604cr.amypo.ai/login"));   //http://localhost:8080
+                .addServersItem(new Server().url(""));   //http://localhost:8080
     }
 }
